@@ -1,24 +1,20 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import {
-  getAuth,
-  signInAnonymously,
-  onAuthStateChanged,
-  User as FirebaseUser
-} from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import {
   getFirestore,
   doc,
   getDocFromServer,
-  collection,
-  query,
-  onSnapshot,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  setDoc,
   Firestore
 } from 'firebase/firestore';
-import firebaseConfig from '../firebase-applet-config.json';
+
+const firebaseConfig = {
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'cloudiaudi',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || '1:727255235272:web:6df5a957c5422197b003fd',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyCVCm-GV7-V6vujtnqRb_nuETO-mg1B9LE',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'cloudiaudi.firebaseapp.com',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'cloudiaudi.firebasestorage.app',
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '727255235272',
+};
 
 export enum OperationType {
   CREATE = 'create',
@@ -75,7 +71,8 @@ export function handleFirestoreError(
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 export const auth = getAuth(app);
-export const db: Firestore = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+const databaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;
+export const db: Firestore = databaseId ? getFirestore(app, databaseId) : getFirestore(app);
 
 export async function verifyFirestoreConnection(): Promise<boolean> {
   try {

@@ -15,12 +15,7 @@ import {
   handleFirestoreError,
   OperationType
 } from './firebase.ts';
-import {
-  signInWithCustomToken,
-  signInAnonymously,
-  onAuthStateChanged,
-  User as FirebaseUser
-} from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import {
   collection,
   doc,
@@ -628,19 +623,6 @@ export default function App() {
   useEffect(() => {
     let isMounted = true;
 
-    const setupAuth = async () => {
-      try {
-        const windowCustomToken = (window as unknown as { __initial_auth_token?: string }).__initial_auth_token;
-        if (windowCustomToken && !auth.currentUser) {
-          await signInWithCustomToken(auth, windowCustomToken);
-        }
-      } catch {
-        // Rustige fallback
-      }
-    };
-
-    setupAuth();
-
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!isMounted) return;
       if (currentUser) {
@@ -682,8 +664,10 @@ export default function App() {
           ...d.data()
         })) as NetworkEmail[];
 
-        fetched.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        setEmails(fetched);
+        if (fetched.length > 0) {
+          fetched.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          setEmails(fetched);
+        }
         setIsLoadingData(false);
       },
       (err) => {
