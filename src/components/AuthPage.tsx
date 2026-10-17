@@ -327,26 +327,26 @@ export function AuthPage({ onSuccessLogin }: AuthPageProps) {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-slate-900/40 rounded-full blur-3xl pointer-events-none" />
 
       {/* Top Header */}
-      <header className="px-4 sm:px-8 py-5 flex items-center justify-between border-b border-slate-900/80 bg-slate-950/70 backdrop-blur-md relative z-10">
-        <div className="flex items-center gap-3">
-          <QuantumLogo size={36} />
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-base sm:text-lg tracking-tight text-white font-['Plus_Jakarta_Sans']">
+      <header className="px-3 sm:px-8 py-3.5 sm:py-5 flex items-center justify-between border-b border-slate-900/80 bg-slate-950/70 backdrop-blur-md relative z-10 gap-2 min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <QuantumLogo size={32} className="shrink-0" />
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-bold text-sm sm:text-lg tracking-tight text-white font-['Plus_Jakarta_Sans'] truncate">
                 Quantum Initium
               </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
+              <span className="hidden xs:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shrink-0">
                 Centrale Hub
               </span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-[11px] sm:text-xs text-slate-400 truncate hidden sm:block">
               Communicatienetwerk van de Twaalf Ondernemingen
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300">
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300">
             <Shield className="w-3.5 h-3.5 text-emerald-400" />
             <span>Beveiligde SSL Verbinding</span>
           </div>

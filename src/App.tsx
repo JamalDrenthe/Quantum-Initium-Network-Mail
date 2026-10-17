@@ -1590,8 +1590,9 @@ export default function App() {
       )}
 
       {/* Top Navigation Bar: Executive Navy & Gold Theme */}
-      <header className="h-16 bg-slate-900/90 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between border-b border-slate-800/80 shrink-0 z-30">
-        <div className="flex items-center gap-2 sm:gap-3">
+      <header className="h-16 bg-slate-900/90 backdrop-blur-md px-2.5 sm:px-4 md:px-6 flex items-center justify-between border-b border-slate-800/80 shrink-0 z-30 gap-2 sm:gap-4 min-w-0 w-full">
+        {/* Left Branding Group */}
+        <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink-0">
           <button
             onClick={() => {
               if (typeof window !== 'undefined' && window.innerWidth < 768) {
@@ -1610,36 +1611,38 @@ export default function App() {
             <Menu className="w-4 h-4" />
           </button>
 
-          <div className="flex items-center gap-2 sm:gap-2.5">
-            <QuantumLogo size={32} />
-            <div>
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+            <QuantumLogo size={30} className="shrink-0" />
+            <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="font-bold text-xs sm:text-base tracking-tight text-white font-['Plus_Jakarta_Sans'] truncate">
+                <span className="font-bold text-xs xs:text-sm sm:text-base tracking-tight text-white font-['Plus_Jakarta_Sans'] truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none">
                   Quantum Initium
                 </span>
-                <span className="hidden sm:inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
-                  Firebase Cloud
+                <span className="hidden md:inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shrink-0">
+                  Centrale Hub
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 hidden lg:block">
+              <p className="text-[11px] text-slate-400 hidden xl:block truncate">
                 Twaalf bedrijven communicatiehub
               </p>
             </div>
           </div>
         </div>
 
-        {/* View Switcher */}
+        {/* Center View Switcher */}
         <div className="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/60 shrink-0">
           <button
             onClick={() => setActiveTab('mail')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
               activeTab === 'mail'
                 ? 'bg-amber-500 text-slate-950 font-bold shadow-md'
                 : 'text-slate-300 hover:text-white'
             }`}
+            title="QI Mail postvak"
           >
-            <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            <span>QI Mail</span>
+            <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <span className="hidden sm:inline">QI Mail</span>
+            <span className="sm:hidden text-xs">Mail</span>
             {unreadCountsByCompany.ALL > 0 && (
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                 activeTab === 'mail' ? 'bg-slate-950 text-amber-300' : 'bg-amber-400 text-slate-950'
@@ -1651,14 +1654,16 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab('chat')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
               activeTab === 'chat'
                 ? 'bg-emerald-500 text-slate-950 font-bold shadow-md'
                 : 'text-slate-300 hover:text-white'
             }`}
+            title="QI Chat kanalen"
           >
-            <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            <span>QI Chat</span>
+            <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+            <span className="hidden sm:inline">QI Chat</span>
+            <span className="sm:hidden text-xs">Chat</span>
             <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
               activeTab === 'chat' ? 'bg-slate-950 text-emerald-300' : 'bg-slate-700 text-slate-300'
             }`}>
@@ -1675,7 +1680,7 @@ export default function App() {
             }`}
             title="Email en chat overzichtelijk naast elkaar"
           >
-            <Layers className="w-4 h-4" />
+            <Layers className="w-4 h-4 shrink-0" />
             <span>Split View</span>
           </button>
         </div>
@@ -1685,23 +1690,25 @@ export default function App() {
           <button
             onClick={handleReceiveAllSampleEmails}
             disabled={isGeneratingSamples}
-            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold shadow-md transition active:scale-95 shrink-0"
+            className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold shadow-md transition active:scale-95 shrink-0"
             title="Ontvang een live voorbeeldmail op alle twaalf zakelijke adressen"
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">{isGeneratingSamples ? 'Bezig...' : 'Voorbeeldmail op Alle 12'}</span>
-            <span className="md:hidden">{isGeneratingSamples ? '...' : 'Voorbeeld'}</span>
+            <Sparkles className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden lg:inline">{isGeneratingSamples ? 'Bezig...' : 'Voorbeeldmail op Alle 12'}</span>
+            <span className="hidden sm:inline lg:hidden">{isGeneratingSamples ? '...' : 'Voorbeeld'}</span>
           </button>
 
           <button
             onClick={() => setShowAddressesModal(true)}
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition"
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition shrink-0"
+            title="Bekijk de 12 gekoppelde adressen"
           >
-            <Building2 className="w-3.5 h-3.5 text-amber-400" />
+            <Building2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <span>12 Adressen</span>
           </button>
 
-          <div className="flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700/60 shrink-0">
+          {/* Directie / Partner Toggle (Visible from md up, accessible in mobile drawer for small screens) */}
+          <div className="hidden md:flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700/60 shrink-0">
             <button
               onClick={() => {
                 setIsAdminMode(true);
@@ -1734,8 +1741,8 @@ export default function App() {
 
           <button
             onClick={() => setShowProfileModal(true)}
-            className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700/70 flex items-center justify-center text-slate-300 hover:text-white transition shrink-0"
-            title="Profiel en Firebase status"
+            className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700/70 flex items-center justify-center text-slate-300 hover:text-white transition shrink-0"
+            title="Profiel en systeemstatus"
           >
             <Settings className="w-4 h-4" />
           </button>
