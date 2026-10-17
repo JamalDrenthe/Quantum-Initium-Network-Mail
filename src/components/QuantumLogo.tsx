@@ -1,0 +1,137 @@
+import React from 'react';
+
+interface QuantumLogoProps {
+  className?: string;
+  size?: number;
+}
+
+export const QuantumLogo: React.FC<QuantumLogoProps> = ({ className = '', size = 44 }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 500 500"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={`shrink-0 drop-shadow-md ${className}`}
+    >
+      <defs>
+        {/* Deep Midnight Blue Gradient */}
+        <linearGradient id="qinNavyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#1e3a5f" />
+          <stop offset="45%" stopColor="#0f2537" />
+          <stop offset="100%" stopColor="#081420" />
+        </linearGradient>
+
+        {/* Polished Gold Gradient */}
+        <linearGradient id="qinGoldGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#9a7432" />
+          <stop offset="25%" stopColor="#d4af37" />
+          <stop offset="50%" stopColor="#fdf0cd" />
+          <stop offset="75%" stopColor="#c59b27" />
+          <stop offset="100%" stopColor="#876023" />
+        </linearGradient>
+
+        {/* Gold Light Gradient */}
+        <linearGradient id="qinGoldLight" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#fae5aa" />
+          <stop offset="60%" stopColor="#cfa144" />
+          <stop offset="100%" stopColor="#8c641e" />
+        </linearGradient>
+
+        {/* Pillar Highlight */}
+        <linearGradient id="qinPillarBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#1a3b5c" />
+          <stop offset="50%" stopColor="#2c5e8a" />
+          <stop offset="100%" stopColor="#142c44" />
+        </linearGradient>
+
+        <filter id="qinGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#d4af37" floodOpacity="0.25" />
+        </filter>
+      </defs>
+
+      {/* Outer Navy Ring */}
+      <circle
+        cx="250"
+        cy="245"
+        r="185"
+        stroke="url(#qinNavyGrad)"
+        strokeWidth="28"
+        fill="none"
+      />
+
+      {/* Inner Metallic Gold Beveled Ring */}
+      <circle
+        cx="250"
+        cy="245"
+        r="165"
+        stroke="url(#qinGoldGrad)"
+        strokeWidth="14"
+        fill="none"
+      />
+
+      {/* Left Growth Bar (Short, Blue) */}
+      <rect
+        x="180"
+        y="250"
+        width="34"
+        height="75"
+        rx="4"
+        fill="url(#qinPillarBlue)"
+        stroke="url(#qinNavyGrad)"
+        strokeWidth="3"
+      />
+
+      {/* Middle Growth Bar (Medium, Blue with Bevel) */}
+      <rect
+        x="228"
+        y="205"
+        width="38"
+        height="120"
+        rx="4"
+        fill="url(#qinPillarBlue)"
+        stroke="url(#qinNavyGrad)"
+        strokeWidth="3"
+      />
+
+      {/* Right Pillar (Tall, Polished Gold with Pyramid Cap) */}
+      <polygon
+        points="278,160 297,140 316,160"
+        fill="url(#qinGoldLight)"
+      />
+      <rect
+        x="278"
+        y="164"
+        width="38"
+        height="160"
+        rx="3"
+        fill="url(#qinGoldGrad)"
+        stroke="#876023"
+        strokeWidth="2"
+      />
+
+      {/* Dynamic Golden Swoosh & Tail of the Q */}
+      <path
+        d="M 175 330 C 215 285 270 230 315 200 C 318 206 314 216 305 230 C 265 270 215 315 180 345 Z"
+        fill="url(#qinGoldLight)"
+      />
+
+      <path
+        d="M 180 338 C 210 320 255 310 290 335 C 335 365 375 390 415 375 C 370 415 320 380 280 345 C 245 320 205 328 180 338 Z"
+        fill="url(#qinGoldGrad)"
+        filter="url(#qinGlow)"
+      />
+
+      {/* Base Gold Sphere */}
+      <circle
+        cx="250"
+        cy="350"
+        r="11"
+        fill="url(#qinGoldLight)"
+        stroke="#7a5518"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+};
