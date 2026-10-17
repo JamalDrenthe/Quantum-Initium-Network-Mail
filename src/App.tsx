@@ -1594,19 +1594,9 @@ export default function App() {
         {/* Left Branding Group */}
         <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink-0">
           <button
-            onClick={() => {
-              if (typeof window !== 'undefined' && window.innerWidth < 768) {
-                setIsMobileDrawerOpen(true);
-              } else {
-                if (activeTab === 'chat') {
-                  setIsChatSidebarCollapsed((prev) => !prev);
-                } else {
-                  setIsSidebarCollapsed((prev) => !prev);
-                }
-              }
-            }}
+            onClick={() => setIsMobileDrawerOpen((prev) => !prev)}
             className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700/60 transition shrink-0"
-            title="Menu openen"
+            title="Menu openen (Instellingen, Voorbeeld & Postvakken)"
           >
             <Menu className="w-4 h-4" />
           </button>
@@ -1688,17 +1678,6 @@ export default function App() {
         {/* Right Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button
-            onClick={handleReceiveAllSampleEmails}
-            disabled={isGeneratingSamples}
-            className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold shadow-md transition active:scale-95 shrink-0"
-            title="Ontvang een live voorbeeldmail op alle twaalf zakelijke adressen"
-          >
-            <Sparkles className="w-3.5 h-3.5 shrink-0" />
-            <span className="hidden lg:inline">{isGeneratingSamples ? 'Bezig...' : 'Voorbeeldmail op Alle 12'}</span>
-            <span className="hidden sm:inline lg:hidden">{isGeneratingSamples ? '...' : 'Voorbeeld'}</span>
-          </button>
-
-          <button
             onClick={() => setShowAddressesModal(true)}
             className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition shrink-0"
             title="Bekijk de 12 gekoppelde adressen"
@@ -1707,7 +1686,7 @@ export default function App() {
             <span>12 Adressen</span>
           </button>
 
-          {/* Directie / Partner Toggle (Visible from md up, accessible in mobile drawer for small screens) */}
+          {/* Directie / Partner Toggle (Visible from md up, accessible in menu drawer for all screens) */}
           <div className="hidden md:flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700/60 shrink-0">
             <button
               onClick={() => {
@@ -1738,20 +1717,12 @@ export default function App() {
               <span>Partner</span>
             </button>
           </div>
-
-          <button
-            onClick={() => setShowProfileModal(true)}
-            className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700/70 flex items-center justify-center text-slate-300 hover:text-white transition shrink-0"
-            title="Profiel en systeemstatus"
-          >
-            <Settings className="w-4 h-4" />
-          </button>
         </div>
       </header>
 
-      {/* Mobile Slideover Drawer for Postvakken & 12 Bedrijven */}
+      {/* Slideover Menu Drawer for Postvakken, Voorbeeld & Instellingen */}
       {isMobileDrawerOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
+        <div className="fixed inset-0 z-50 flex">
           <div
             onClick={() => setIsMobileDrawerOpen(false)}
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"
@@ -1793,6 +1764,36 @@ export default function App() {
                   <span>Ontvangstmodus actief</span>
                 </div>
               )}
+
+              {/* Voorbeeldmail Button */}
+              <button
+                onClick={() => {
+                  setIsMobileDrawerOpen(false);
+                  handleReceiveAllSampleEmails();
+                }}
+                disabled={isGeneratingSamples}
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition active:scale-95 disabled:opacity-50"
+                title="Ontvang een live voorbeeldmail op alle twaalf zakelijke adressen"
+              >
+                <Sparkles className="w-4 h-4 shrink-0" />
+                <span>{isGeneratingSamples ? 'Bezig met genereren...' : 'Voorbeeldmail op Alle 12'}</span>
+              </button>
+
+              {/* Instellingen Button */}
+              <button
+                onClick={() => {
+                  setIsMobileDrawerOpen(false);
+                  setShowProfileModal(true);
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-200 hover:text-white transition"
+                title="Profiel en systeemstatus bekijken"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="font-semibold">Instellingen</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              </button>
 
               <div className="flex items-center bg-slate-900 rounded-xl p-1 border border-slate-800">
                 <button
@@ -2009,13 +2010,13 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => {
                     setIsMobileDrawerOpen(false);
                     setShowAddressesModal(true);
                   }}
-                  className="flex-1 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 flex items-center justify-center gap-1.5"
+                  className="py-2 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 flex items-center justify-center gap-1.5 transition"
                 >
                   <Building2 className="w-3.5 h-3.5 text-amber-400" />
                   <span>12 Adressen</span>
@@ -2024,9 +2025,22 @@ export default function App() {
                 <button
                   onClick={() => {
                     setIsMobileDrawerOpen(false);
+                    setShowProfileModal(true);
+                  }}
+                  className="py-2 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 flex items-center justify-center gap-1.5 transition"
+                >
+                  <Settings className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Instellingen</span>
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between gap-2 pt-1">
+                <button
+                  onClick={() => {
+                    setIsMobileDrawerOpen(false);
                     setShowDeleteAllModal(true);
                   }}
-                  className="p-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-rose-400"
+                  className="p-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-rose-400 transition"
                   title="Alles wissen"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -2034,7 +2048,7 @@ export default function App() {
 
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-slate-300 hover:text-rose-300 text-xs font-semibold"
+                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-slate-300 hover:text-rose-300 text-xs font-semibold transition"
                   title="Uitloggen"
                 >
                   <LogOut className="w-4 h-4" />
@@ -2291,8 +2305,41 @@ export default function App() {
                 })}
               </div>
 
-              {/* Bottom Partner Card & Logout */}
+              {/* Bottom Actions, Partner Card & Logout */}
               <div className="p-2.5 bg-slate-950 border-t border-slate-800/80 space-y-1.5">
+                <button
+                  onClick={handleReceiveAllSampleEmails}
+                  disabled={isGeneratingSamples}
+                  className={`w-full ${
+                    isSidebarCollapsed ? 'p-2 justify-center' : 'px-3 py-2 justify-between'
+                  } rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold transition flex items-center active:scale-95 disabled:opacity-50`}
+                  title="Ontvang een live voorbeeldmail op alle twaalf zakelijke adressen"
+                >
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                    {!isSidebarCollapsed && <span>{isGeneratingSamples ? 'Bezig...' : 'Voorbeeldmail'}</span>}
+                  </div>
+                  {!isSidebarCollapsed && (
+                    <span className="text-[10px] text-amber-400/80 font-normal">Alle 12</span>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setShowProfileModal(true)}
+                  className={`w-full ${
+                    isSidebarCollapsed ? 'p-2 justify-center' : 'px-3 py-2 justify-between'
+                  } rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold transition flex items-center`}
+                  title="Instellingen en systeemstatus bekijken"
+                >
+                  <div className="flex items-center gap-2">
+                    <Settings className="w-4 h-4 text-amber-400 shrink-0" />
+                    {!isSidebarCollapsed && <span>Instellingen</span>}
+                  </div>
+                  {!isSidebarCollapsed && (
+                    <span className="text-[10px] text-slate-500 font-normal">Beheer</span>
+                  )}
+                </button>
+
                 <button
                   onClick={() => setShowAddressesModal(true)}
                   className={`w-full ${
@@ -2960,8 +3007,24 @@ export default function App() {
                 })}
               </div>
 
-              {/* Chat Sidebar Bottom Logout */}
-              <div className="p-2.5 bg-slate-950 border-t border-slate-800/80">
+              {/* Chat Sidebar Bottom Settings & Logout */}
+              <div className="p-2.5 bg-slate-950 border-t border-slate-800/80 space-y-1.5">
+                <button
+                  onClick={() => setShowProfileModal(true)}
+                  className={`w-full ${
+                    isChatSidebarCollapsed ? 'p-2 justify-center' : 'px-3 py-2 justify-between'
+                  } rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold transition flex items-center`}
+                  title="Instellingen en systeemstatus bekijken"
+                >
+                  <div className="flex items-center gap-2">
+                    <Settings className="w-4 h-4 text-amber-400 shrink-0" />
+                    {!isChatSidebarCollapsed && <span>Instellingen</span>}
+                  </div>
+                  {!isChatSidebarCollapsed && (
+                    <span className="text-[10px] text-slate-500 font-normal">Beheer</span>
+                  )}
+                </button>
+
                 <button
                   onClick={handleLogout}
                   className={`w-full ${
