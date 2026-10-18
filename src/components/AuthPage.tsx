@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Lock, Mail, User, Shield, Building2, CheckCircle2,
-  ArrowRight, Eye, EyeOff, Sparkles, AlertCircle, KeyRound,
+  ArrowRight, Eye, EyeOff, UserCheck, AlertCircle, KeyRound,
   Briefcase, Check
 } from 'lucide-react';
 import {
@@ -340,7 +340,7 @@ export function AuthPage({ onSuccessLogin }: AuthPageProps) {
               </span>
             </div>
             <p className="text-[11px] sm:text-xs text-slate-400 truncate hidden sm:block">
-              Communicatienetwerk van de Twaalf Ondernemingen
+              Communicatieplatform voor directie en partners
             </p>
           </div>
         </div>
@@ -696,7 +696,7 @@ export function AuthPage({ onSuccessLogin }: AuthPageProps) {
                   onClick={() => handleQuickDemoAccess('Partner', 'investbotiq')}
                   className="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-semibold transition flex items-center justify-center gap-1.5"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                  <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Partner Demo Toegang</span>
                 </button>
               </div>
@@ -729,7 +729,7 @@ export function AuthPage({ onSuccessLogin }: AuthPageProps) {
       {/* Footer Info */}
       <footer className="px-4 py-4 text-center text-xs text-slate-400 border-t border-slate-900/60 bg-slate-950/80 relative z-10">
         <p>
-          Quantum Initium Network • Beveiligde Directie & Partner Hub • Cloud Firestore Realtime Sync
+          © 2026 Quantum Initium • Beveiligde Directie & Partner Communicatiehub
         </p>
       </footer>
     </div>

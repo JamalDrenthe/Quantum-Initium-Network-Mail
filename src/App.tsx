@@ -4,7 +4,7 @@ import {
   Shield, User, Building2, Inbox, Paperclip, ArrowLeft,
   Settings, ChevronRight, AlertCircle, Trash2, Lock,
   Copy, CheckCircle2, Layers, FileText, PanelLeftClose,
-  PanelLeftOpen, Menu, Sparkles, Filter, RefreshCw, X, LogOut, Reply,
+  PanelLeftOpen, Menu, Filter, RefreshCw, X, LogOut, Reply,
   Pin, PinOff, ExternalLink, Bookmark, SlidersHorizontal, Calendar, Archive
 } from 'lucide-react';
 
@@ -1613,7 +1613,7 @@ export default function App() {
                 </span>
               </div>
               <p className="text-[11px] text-slate-400 hidden xl:block truncate">
-                Twaalf bedrijven communicatiehub
+                Zakelijke communicatiehub
               </p>
             </div>
           </div>
@@ -1691,7 +1691,7 @@ export default function App() {
             <button
               onClick={() => {
                 setIsAdminMode(true);
-                showToast('Directiemodus actief: je kunt nieuwe emails verzenden namens alle twaalf bedrijven');
+                showToast('Directiemodus actief (verzenden als beheerder)');
               }}
               className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
                 isAdminMode
@@ -1705,7 +1705,7 @@ export default function App() {
             <button
               onClick={() => {
                 setIsAdminMode(false);
-                showToast('Partnermodus actief: je bekijkt de berichten als ontvangende relatie');
+                showToast('Partnermodus actief (ontvangstweergave)');
               }}
               className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
                 !isAdminMode
@@ -1765,18 +1765,18 @@ export default function App() {
                 </div>
               )}
 
-              {/* Voorbeeldmail Button */}
+              {/* Demoberichten Button */}
               <button
                 onClick={() => {
                   setIsMobileDrawerOpen(false);
                   handleReceiveAllSampleEmails();
                 }}
                 disabled={isGeneratingSamples}
-                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition active:scale-95 disabled:opacity-50"
-                title="Ontvang een live voorbeeldmail op alle twaalf zakelijke adressen"
+                className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 font-semibold text-xs shadow-sm transition active:scale-95 disabled:opacity-50"
+                title="Laad representatieve demberichten in voor alle 12 postvakken"
               >
-                <Sparkles className="w-4 h-4 shrink-0" />
-                <span>{isGeneratingSamples ? 'Bezig met genereren...' : 'Voorbeeldmail op Alle 12'}</span>
+                <FileText className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{isGeneratingSamples ? 'Bezig met inladen...' : 'Demoberichten Inladen'}</span>
               </button>
 
               {/* Instellingen Button */}
@@ -2312,15 +2312,15 @@ export default function App() {
                   disabled={isGeneratingSamples}
                   className={`w-full ${
                     isSidebarCollapsed ? 'p-2 justify-center' : 'px-3 py-2 justify-between'
-                  } rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold transition flex items-center active:scale-95 disabled:opacity-50`}
-                  title="Ontvang een live voorbeeldmail op alle twaalf zakelijke adressen"
+                  } rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold transition flex items-center active:scale-95 disabled:opacity-50`}
+                  title="Laad representatieve demberichten in voor alle 12 postvakken"
                 >
                   <div className="flex items-center gap-2">
-                    <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
-                    {!isSidebarCollapsed && <span>{isGeneratingSamples ? 'Bezig...' : 'Voorbeeldmail'}</span>}
+                    <FileText className="w-4 h-4 text-amber-400 shrink-0" />
+                    {!isSidebarCollapsed && <span>{isGeneratingSamples ? 'Bezig...' : 'Demoberichten'}</span>}
                   </div>
                   {!isSidebarCollapsed && (
-                    <span className="text-[10px] text-amber-400/80 font-normal">Alle 12</span>
+                    <span className="text-[10px] text-slate-400 font-normal">Alle 12</span>
                   )}
                 </button>
 
@@ -2391,7 +2391,7 @@ export default function App() {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Zoek in alle twaalf postvakken..."
+                      placeholder="Zoek op onderwerp, afzender of trefwoord..."
                       className="w-full pl-9 pr-8 py-1.5 sm:py-2 bg-slate-950 rounded-xl text-xs sm:text-sm text-slate-200 placeholder:text-slate-500 border border-slate-800 focus:border-amber-500 focus:outline-none transition"
                     />
                     {searchQuery && (
@@ -2674,17 +2674,9 @@ export default function App() {
                               {comp.name}
                             </span>
 
-                            {isSample && (
-                              <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1">
-                                <Sparkles className="w-3 h-3" />
-                                <span>Zakelijke Voorbeeldmail</span>
-                              </span>
-                            )}
-
                             {isWelcome && (
-                              <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1">
-                                <Sparkles className="w-3 h-3" />
-                                <span>Officieel Welkomstbericht</span>
+                              <span className="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-800 text-slate-300 border border-slate-700/80">
+                                Introductiebericht
                               </span>
                             )}
 
@@ -2846,24 +2838,24 @@ export default function App() {
                       <div className="w-12 h-12 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center mx-auto mb-3">
                         <Inbox className="w-5 h-5 text-slate-500" />
                       </div>
-                      <p className="text-slate-300 font-bold text-sm sm:text-base">Geen berichten in de postvakken</p>
+                      <p className="text-slate-300 font-bold text-sm sm:text-base">Geen berichten in deze weergave</p>
                       <p className="text-slate-500 text-xs mt-1.5 max-w-sm mx-auto">
-                        De inbox is momenteel leeg. Je kunt op elk moment nieuwe welkomstberichten of voorbeeldmails laten bezorgen.
+                        Er zijn momenteel geen berichten in deze map.
                       </p>
                       <div className="flex flex-wrap items-center justify-center gap-2.5 mt-5">
                         <button
                           onClick={handleReceiveAllWelcomeEmails}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition"
                         >
-                          <Sparkles className="w-4 h-4" />
-                          <span>Ontvang 12 Welkomstmails</span>
+                          <Inbox className="w-4 h-4 text-amber-400" />
+                          <span>Welkomstberichten inladen</span>
                         </button>
                         <button
                           onClick={handleReceiveAllSampleEmails}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-slate-700 font-bold text-xs transition"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-md transition"
                         >
-                          <Mail className="w-4 h-4" />
-                          <span>Ontvang 12 Voorbeeldmails</span>
+                          <FileText className="w-4 h-4" />
+                          <span>Demoberichten inladen</span>
                         </button>
                       </div>
                     </div>
@@ -3433,13 +3425,12 @@ export default function App() {
         </button>
 
         <button
-          onClick={handleReceiveAllSampleEmails}
-          disabled={isGeneratingSamples}
-          className="flex flex-col items-center gap-0.5 py-1 px-2 rounded-lg text-amber-300 active:scale-95"
-          title="Ontvang voorbeeldmail"
+          onClick={() => setShowProfileModal(true)}
+          className="flex flex-col items-center gap-0.5 py-1 px-2 rounded-lg text-slate-400 hover:text-white"
+          title="Instellingen en profiel"
         >
-          <Sparkles className="w-5 h-5 text-amber-400" />
-          <span className="text-[10px] font-bold">Voorbeeld</span>
+          <Settings className="w-5 h-5 text-slate-400" />
+          <span className="text-[10px] font-medium text-slate-300">Instellingen</span>
         </button>
       </nav>
 
@@ -3851,19 +3842,19 @@ export default function App() {
                     }
                     className="px-3 py-1.5 rounded-lg border border-slate-800 bg-slate-900 text-xs font-mono font-bold text-amber-300 w-36 sm:w-40 focus:outline-none focus:border-amber-400"
                   />
-                  <span className="text-xs font-mono text-slate-500">@12bedrijven.qin</span>
+                  <span className="text-xs font-mono text-slate-500">@quantuminitium.qin</span>
                 </div>
               </div>
 
               {/* Action Banner to get Sample Emails on all 12 at once */}
-              <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-emerald-500/10 border border-amber-500/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="p-3.5 sm:p-4 rounded-xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0">
-                    <Sparkles className="w-5 h-5" />
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center shrink-0">
+                    <FileText className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">Ontvang Voorbeeldmails op Alle 12 Adressen</p>
-                    <p className="text-[11px] text-slate-400">Laat elk van de twaalf bedrijven direct een actuele zakelijke voorbeeldmail bezorgen in jouw centrale inbox.</p>
+                    <p className="text-xs font-bold text-white">Demoberichten Inladen</p>
+                    <p className="text-[11px] text-slate-400">Genereer representatieve correspondentie voor alle twaalf aangesloten postvakken.</p>
                   </div>
                 </div>
                 <button
@@ -3872,9 +3863,9 @@ export default function App() {
                     setShowAddressesModal(false);
                   }}
                   disabled={isGeneratingSamples}
-                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shrink-0 shadow-md transition"
+                  className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shrink-0 shadow-md transition active:scale-95 disabled:opacity-50"
                 >
-                  Ontvang Voorbeeldmails
+                  {isGeneratingSamples ? 'Bezig...' : 'Demoberichten Inladen'}
                 </button>
               </div>
 
@@ -4005,10 +3996,10 @@ export default function App() {
                   </div>
                 </div>
                 <div className="flex items-center justify-between pt-1 border-t border-slate-900">
-                  <span className="font-medium text-slate-400">Firebase Cloud Firestore:</span>
+                  <span className="font-medium text-slate-400">Databasesynchronisatie:</span>
                   <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    Actief en Verbonden
+                    Online & Beveiligd
                   </span>
                 </div>
                 <div className="flex items-center justify-between pt-1 border-t border-slate-900">
