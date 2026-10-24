@@ -2,8 +2,14 @@
 
 /* Apple Human Interface Typography & Smooth Rendering */
 :root {
-  --apple-font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", system-ui, sans-serif;
+  --apple-font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Plus Jakarta Sans", system-ui, sans-serif;
   --apple-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --apple-blue: #0071e3;
+  --apple-blue-glow: #2997ff;
+  --apple-bg: #000000;
+  --apple-surface: #121215;
+  --apple-gray-subtext: #86868b;
+  --apple-border: rgba(255, 255, 255, 0.12);
 }
 
 html {
@@ -12,78 +18,108 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  background-color: #000000;
 }
 
 body {
   font-family: var(--apple-font-stack);
-  letter-spacing: -0.011em;
-  background-color: #030712;
-  color: #f8fafc;
+  letter-spacing: -0.015em;
+  background-color: #000000;
+  color: #f5f5f7;
 }
 
-/* Apple Liquid Retina Frosted Glass Utilities */
+/* Authentic Apple Vision Pro & macOS Sonoma Frosted Glass */
 .apple-glass {
-  background: rgba(10, 14, 23, 0.75);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  background: rgba(18, 18, 22, 0.7);
+  backdrop-filter: blur(36px) saturate(190%);
+  -webkit-backdrop-filter: blur(36px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
 }
 
 .apple-glass-card {
-  background: radial-gradient(130% 100% at 50% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%), rgba(8, 12, 20, 0.7);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+  background: radial-gradient(130% 120% at 50% 0%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(20, 20, 26, 0.65);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow: 0 14px 34px -10px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.18);
   transition: all 0.35s var(--apple-ease);
 }
 
 .apple-glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.18);
+  background: radial-gradient(130% 120% at 50% 0%, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%), rgba(26, 26, 34, 0.75);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.85), inset 0 1px 1px 0 rgba(255, 255, 255, 0.28);
   transform: translateY(-2px);
 }
 
-/* Apple-style Specular Pill Buttons */
-.apple-btn-gold {
-  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
-  box-shadow: 0 2px 8px -1px rgba(245, 158, 11, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+/* Apple Hardware Display Bevel Frame */
+.apple-hardware-frame {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 40px 120px -20px rgba(0, 0, 0, 0.95), inset 0 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* Apple Buttons */
+.apple-btn-primary {
+  background: linear-gradient(180deg, #0077ed 0%, #0066cc 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 14px 0 rgba(0, 113, 227, 0.38), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
   transition: all 0.2s var(--apple-ease);
 }
 
-.apple-btn-gold:hover {
-  filter: brightness(1.08);
-  box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.55);
+.apple-btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px 0 rgba(0, 113, 227, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.6);
 }
 
-.apple-btn-gold:active {
+.apple-btn-primary:active {
   transform: scale(0.97);
   filter: brightness(0.95);
 }
 
+.apple-btn-white {
+  background: #ffffff;
+  color: #000000;
+  box-shadow: 0 4px 14px 0 rgba(255, 255, 255, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.2s var(--apple-ease);
+}
+
+.apple-btn-white:hover {
+  background: #f5f5f7;
+  box-shadow: 0 6px 20px 0 rgba(255, 255, 255, 0.35);
+}
+
+.apple-btn-white:active {
+  transform: scale(0.97);
+  background: #e5e5ea;
+}
+
 .apple-btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f5f5f7;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
   transition: all 0.2s var(--apple-ease);
 }
 
 .apple-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #ffffff;
 }
 
 .apple-btn-secondary:active {
   transform: scale(0.97);
 }
 
-/* Sleek Apple-style Subdued Scrollbars */
+/* Apple Subdued Scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -96,13 +132,13 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 9999px;
   transition: background 0.2s ease;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(245, 158, 11, 0.6);
+  background: rgba(0, 113, 227, 0.7);
 }
 
 *::-webkit-scrollbar-button {

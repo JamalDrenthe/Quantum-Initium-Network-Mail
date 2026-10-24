@@ -343,9 +343,9 @@ export function AuthPage({
       )}
 
       {bannerNotice && (
-        <div className="mb-6 p-4 rounded-2xl bg-amber-500/15 border border-amber-500/35 text-amber-200 text-xs sm:text-sm flex items-start gap-3 shadow-sm">
-          <span className="text-base shrink-0 mt-0.5">👁️</span>
-          <span className="leading-snug">{bannerNotice}</span>
+        <div className="mb-6 p-4 rounded-2xl bg-white/[0.06] border border-white/15 text-[#f5f5f7] text-xs sm:text-sm flex items-start gap-3 shadow-sm">
+          <span className="text-base shrink-0 mt-0.5 text-[#2997ff]">👁️</span>
+          <span className="leading-snug text-[#f5f5f7]">{bannerNotice}</span>
         </div>
       )}
 
@@ -428,7 +428,7 @@ export function AuthPage({
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       placeholder="bijvoorbeeld directie@quantuminitium.qin"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                     />
                   </div>
                 </div>
@@ -441,7 +441,7 @@ export function AuthPage({
                     <button
                       type="button"
                       onClick={() => setErrorMessage('Neem contact op met de systeembeheerder van Quantum Initium om je wachtwoord te herstellen.')}
-                      className="text-[11px] text-amber-400 hover:underline"
+                      className="text-[11px] text-[#2997ff] hover:underline"
                     >
                       Wachtwoord vergeten?
                     </button>
@@ -454,7 +454,7 @@ export function AuthPage({
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="Voer je wachtwoord in"
-                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                      className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                     />
                     <button
                       type="button"
@@ -473,7 +473,7 @@ export function AuthPage({
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      className="w-4 h-4 rounded bg-slate-950 border-slate-700 text-amber-500 focus:ring-0"
+                      className="w-4 h-4 rounded bg-white/10 border-white/20 text-[#0071e3] focus:ring-0"
                     />
                     <span className="text-xs text-slate-400">Onthoud mijn sessie</span>
                   </label>
@@ -511,7 +511,7 @@ export function AuthPage({
                       value={regName}
                       onChange={(e) => setRegName(e.target.value)}
                       placeholder="bijvoorbeeld Alexander de Vries"
-                      className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                     />
                   </div>
                 </div>
@@ -526,10 +526,10 @@ export function AuthPage({
                       <select
                         value={regCompany}
                         onChange={(e) => setRegCompany(e.target.value)}
-                        className="w-full pl-10 pr-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-400 transition"
+                        className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                       >
                         {COMPANIES.map((c) => (
-                          <option key={c.id} value={c.id}>
+                          <option key={c.id} value={c.id} className="bg-slate-900 text-white">
                             {c.name}
                           </option>
                         ))}
@@ -546,10 +546,10 @@ export function AuthPage({
                       <select
                         value={regRole}
                         onChange={(e) => setRegRole(e.target.value as 'Directie' | 'Partner')}
-                        className="w-full pl-10 pr-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white focus:outline-none focus:border-amber-400 transition"
+                        className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                       >
-                        <option value="Directie">Directie en Bestuur</option>
-                        <option value="Partner">Zakelijk Partner</option>
+                        <option value="Directie" className="bg-slate-900 text-white">Directie en Bestuur</option>
+                        <option value="Partner" className="bg-slate-900 text-white">Zakelijk Partner</option>
                       </select>
                     </div>
                   </div>
@@ -567,7 +567,7 @@ export function AuthPage({
                       value={regEmail}
                       onChange={(e) => setRegEmail(e.target.value)}
                       placeholder="naam@onderneming.qin"
-                      className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                     />
                   </div>
                 </div>
@@ -585,7 +585,7 @@ export function AuthPage({
                         value={regPassword}
                         onChange={(e) => setRegPassword(e.target.value)}
                         placeholder="Minstens 6 tekens"
-                        className="w-full pl-10 pr-8 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                        className="w-full pl-10 pr-8 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                       />
                       <button
                         type="button"
@@ -609,7 +609,7 @@ export function AuthPage({
                         value={regPasswordConfirm}
                         onChange={(e) => setRegPasswordConfirm(e.target.value)}
                         placeholder="Herhaal wachtwoord"
-                        className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-950 border border-slate-800 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 transition"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                       />
                     </div>
                   </div>
@@ -677,17 +677,17 @@ export function AuthPage({
                 <button
                   type="button"
                   onClick={() => handleQuickDemoAccess('Directie', 'quantum_initium')}
-                  className="py-2.5 px-3 rounded-full apple-btn-secondary text-amber-300 text-xs font-semibold transition flex items-center justify-center gap-1.5"
+                  className="py-2.5 px-3 rounded-full apple-btn-secondary text-[#2997ff] text-xs font-semibold transition flex items-center justify-center gap-1.5"
                 >
-                  <Shield className="w-3.5 h-3.5 text-amber-400" />
+                  <Shield className="w-3.5 h-3.5 text-[#2997ff]" />
                   <span>Directie Demo Toegang</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => handleQuickDemoAccess('Partner', 'investbotiq')}
-                  className="py-2.5 px-3 rounded-full apple-btn-secondary text-slate-300 text-xs font-semibold transition flex items-center justify-center gap-1.5"
+                  className="py-2.5 px-3 rounded-full apple-btn-secondary text-[#f5f5f7] text-xs font-semibold transition flex items-center justify-center gap-1.5"
                 >
-                  <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <UserCheck className="w-3.5 h-3.5 text-[#30d158]" />
                   <span>Partner Demo Toegang</span>
                 </button>
               </div>
@@ -704,7 +704,7 @@ export function AuthPage({
           <button
             type="button"
             onClick={onClose}
-            className="text-xs text-slate-400 hover:text-amber-300 transition underline underline-offset-4"
+            className="text-xs text-[#86868b] hover:text-[#2997ff] transition underline underline-offset-4"
           >
             Verder bladeren als bezoeker (bedragen blijven afgeschermd)
           </button>
@@ -713,14 +713,14 @@ export function AuthPage({
 
       {/* 12 Network Entities Badges Footer */}
       <div className="mt-5 text-center">
-        <p className="text-[11px] text-slate-400 font-medium mb-2.5">
+        <p className="text-[11px] text-[#86868b] font-medium mb-2.5">
           Gekoppeld aan de 12 centrale ondernemingen van het netwerk
         </p>
         <div className="flex flex-wrap items-center justify-center gap-1.5">
           {COMPANIES.map((comp) => (
             <span
               key={comp.id}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[10px] text-slate-300"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[10px] text-[#86868b]"
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
@@ -745,26 +745,25 @@ export function AuthPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-black text-[#f5f5f7] flex flex-col justify-between selection:bg-[#0071e3] selection:text-white font-sans relative overflow-hidden">
       {/* Background Decorative Glows */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-slate-900/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0071e3]/12 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-[#5e5ce6]/10 rounded-full blur-[120px] pointer-events-none" />
 
       {/* Top Header */}
-      <header className="px-3 sm:px-8 py-3.5 sm:py-5 flex items-center justify-between border-b border-slate-900/80 bg-slate-950/70 backdrop-blur-md relative z-10 gap-2 min-w-0">
+      <header className="px-4 sm:px-8 py-3.5 sm:py-5 flex items-center justify-between border-b border-white/[0.08] apple-glass relative z-10 gap-2 min-w-0">
         <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <QuantumLogo size={32} className="shrink-0" />
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="font-bold text-sm sm:text-lg tracking-tight text-white font-['Plus_Jakarta_Sans'] truncate">
+              <span className="font-semibold text-sm sm:text-lg tracking-tight text-white truncate">
                 Quantum Initium
               </span>
-              <span className="hidden xs:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shrink-0">
+              <span className="hidden xs:inline-block text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/[0.06] text-[#f5f5f7] border border-white/10 shrink-0">
                 Centrale Hub
               </span>
             </div>
-            <p className="text-[11px] sm:text-xs text-slate-400 truncate hidden sm:block">
+            <p className="text-[11px] sm:text-xs text-[#86868b] truncate hidden sm:block">
               Communicatieplatform voor directie en partners
             </p>
           </div>

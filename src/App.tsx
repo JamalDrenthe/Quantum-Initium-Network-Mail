@@ -155,10 +155,10 @@ export const FormattedAmountText: React.FC<FormattedAmountTextProps> = ({
                 onAmountClick();
               }}
               title="Bedrag zichtbaar (klik op 👁️ om te verbergen)"
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 mx-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/35 text-[11px] sm:text-xs font-mono font-semibold cursor-pointer transition select-none align-baseline group"
+              className="inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 rounded-full bg-[#30d158]/15 hover:bg-[#30d158]/25 text-[#30d158] border border-[#30d158]/35 text-[11px] sm:text-xs font-mono font-semibold cursor-pointer transition select-none align-baseline group"
             >
               <span className="text-xs">👁️</span>
-              <span className="underline decoration-emerald-500/40 underline-offset-2 font-bold">{part}</span>
+              <span className="font-bold">{part}</span>
             </button>
           );
         }
@@ -176,11 +176,11 @@ export const FormattedAmountText: React.FC<FormattedAmountTextProps> = ({
                 ? 'Klik op 👁️ om bedrag te tonen'
                 : 'Inloggen of registreren om bedragen te bekijken (👁️)'
             }
-            className="inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-[11px] sm:text-xs font-semibold cursor-pointer transition select-none shadow-sm align-baseline group"
+            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 mx-0.5 rounded-full bg-white/[0.08] hover:bg-white/[0.14] text-[#2997ff] border border-white/15 text-[11px] sm:text-xs font-semibold cursor-pointer transition select-none shadow-sm align-baseline group"
           >
             <span className="text-xs">👁️</span>
-            <span className="tracking-widest font-mono text-amber-200/90 group-hover:text-amber-100">€ ••••••</span>
-            <span className="text-[10px] uppercase font-bold text-amber-400/90 ml-0.5 hidden xs:inline">
+            <span className="tracking-wider font-mono text-[#f5f5f7]">€ ••••••</span>
+            <span className="text-[10px] uppercase font-semibold text-[#2997ff] ml-0.5 hidden xs:inline">
               {isLoggedIn ? 'Toon' : 'Inloggen'}
             </span>
           </button>
@@ -1739,13 +1739,13 @@ export default function App() {
     return (
       <div className="min-h-screen bg-[#030712] text-slate-100 font-sans antialiased select-none">
         {toastMessage && (
-          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border bg-slate-900/95 backdrop-blur-md text-slate-100 border-amber-500/30 transition-all duration-300">
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl apple-glass border border-white/15 text-[#f5f5f7] transition-all duration-300">
             {toastMessage.type === 'error' ? (
-              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-[#ff453a] shrink-0" />
             ) : (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#30d158] shrink-0" />
             )}
-            <span className="text-xs sm:text-sm font-medium text-slate-200">{toastMessage.msg}</span>
+            <span className="text-xs sm:text-sm font-medium">{toastMessage.msg}</span>
           </div>
         )}
 
@@ -1793,13 +1793,13 @@ export default function App() {
   return (
     <div className="min-h-screen h-screen flex flex-col bg-[#030712] text-slate-100 font-sans antialiased overflow-hidden select-none">
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border bg-slate-900/95 backdrop-blur-md text-slate-100 border-amber-500/30 transition-all duration-300">
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3 rounded-full shadow-2xl apple-glass border border-white/15 text-[#f5f5f7] transition-all duration-300">
           {toastMessage.type === 'error' ? (
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            <AlertCircle className="w-4 h-4 text-[#ff453a] shrink-0" />
           ) : (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-[#30d158] shrink-0" />
           )}
-          <span className="text-xs sm:text-sm font-medium text-slate-200">{toastMessage.msg}</span>
+          <span className="text-xs sm:text-sm font-medium">{toastMessage.msg}</span>
         </div>
       )}
 
@@ -1831,11 +1831,11 @@ export default function App() {
                 <span className="font-semibold text-xs xs:text-sm sm:text-base tracking-[-0.02em] text-white truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none">
                   Quantum Initium
                 </span>
-                <span className="hidden md:inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-white/[0.05] text-amber-300 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] shrink-0">
+                <span className="hidden md:inline-block text-[10px] font-semibold tracking-wider uppercase px-2.5 py-0.5 rounded-full bg-white/[0.08] text-[#f5f5f7] border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] shrink-0">
                   Centrale Hub
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 hidden xl:block truncate">
+              <p className="text-[11px] text-[#86868b] hidden xl:block truncate">
                 Zakelijke communicatiehub
               </p>
             </div>
@@ -1843,13 +1843,13 @@ export default function App() {
         </div>
 
         {/* Center View Switcher: Apple Segmented Pill */}
-        <div className="flex items-center bg-white/[0.05] p-1 rounded-full border border-white/10 shrink-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+        <div className="flex items-center bg-white/[0.06] p-1 rounded-full border border-white/10 shrink-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]">
           <button
             onClick={() => setActiveTab('mail')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'mail'
-                ? 'apple-btn-gold text-slate-950 shadow-md'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-white text-black shadow-md'
+                : 'text-[#86868b] hover:text-white'
             }`}
             title="QI Mail postvak"
           >
@@ -1858,7 +1858,7 @@ export default function App() {
             <span className="sm:hidden text-xs">Mail</span>
             {unreadCountsByCompany.ALL > 0 && (
               <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                activeTab === 'mail' ? 'bg-slate-950 text-amber-300' : 'bg-amber-400 text-slate-950'
+                activeTab === 'mail' ? 'bg-black text-white' : 'bg-[#0071e3] text-white'
               }`}>
                 {unreadCountsByCompany.ALL}
               </span>
@@ -1867,10 +1867,10 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab('chat')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'chat'
-                ? 'bg-emerald-400 text-slate-950 font-bold shadow-md'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-[#0071e3] text-white shadow-md'
+                : 'text-[#86868b] hover:text-white'
             }`}
             title="QI Chat kanalen"
           >
@@ -1878,7 +1878,7 @@ export default function App() {
             <span className="hidden sm:inline">QI Chat</span>
             <span className="sm:hidden text-xs">Chat</span>
             <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-              activeTab === 'chat' ? 'bg-slate-950 text-emerald-300' : 'bg-white/10 text-slate-300'
+              activeTab === 'chat' ? 'bg-black/40 text-white' : 'bg-white/10 text-white'
             }`}>
               {chats.length}
             </span>
@@ -1888,8 +1888,8 @@ export default function App() {
             onClick={() => setActiveTab('split')}
             className={`hidden xl:flex items-center gap-2 px-4 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'split'
-                ? 'bg-indigo-500 text-white shadow-md'
-                : 'text-slate-300 hover:text-white'
+                ? 'bg-white/20 text-white shadow-md'
+                : 'text-[#86868b] hover:text-white'
             }`}
             title="Email en chat overzichtelijk naast elkaar"
           >
@@ -1906,18 +1906,18 @@ export default function App() {
               onClick={handleAmountClick}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all active:scale-95 shrink-0 ${
                 showAmounts
-                  ? 'bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-500/40 text-emerald-300 shadow-sm'
-                  : 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-500/40 text-amber-300 shadow-sm'
+                  ? 'bg-[#30d158]/15 hover:bg-[#30d158]/25 border-[#30d158]/40 text-[#30d158] shadow-sm'
+                  : 'bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border-[#2997ff]/40 text-[#2997ff] shadow-sm'
               }`}
               title={showAmounts ? 'Klik op 👁️ om bedragen te verbergen' : 'Klik op 👁️ om bedragen te tonen'}
             >
               <span className="text-sm">👁️</span>
-              <span className="hidden sm:inline">Bedragen: {showAmounts ? 'Zichtbaar' : 'Verborgen'}</span>
+              <span className="hidden sm:inline font-mono">Bedragen: {showAmounts ? 'Zichtbaar' : 'Verborgen'}</span>
             </button>
           ) : (
             <button
               onClick={handleAmountClick}
-              className="apple-btn-secondary flex items-center gap-1.5 px-3 py-1.5 rounded-full text-amber-300 text-xs font-semibold transition-all active:scale-95 shrink-0"
+              className="apple-btn-secondary flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[#2997ff] text-xs font-semibold transition-all active:scale-95 shrink-0"
               title="Bedragen zijn afgeschermd. Klik om in te loggen of te registreren."
             >
               <span className="text-sm">👁️</span>
@@ -1932,19 +1932,19 @@ export default function App() {
                 window.history.pushState(null, '', '?view=landing');
               } catch {}
             }}
-            className="apple-btn-secondary hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-slate-200 text-xs font-medium transition shrink-0"
+            className="apple-btn-secondary hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[#f5f5f7] text-xs font-medium transition shrink-0"
             title="Terug naar overzicht en landingspagina"
           >
-            <Home className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <Home className="w-3.5 h-3.5 text-[#2997ff] shrink-0" />
             <span>Landingspagina</span>
           </button>
 
           <button
             onClick={() => setShowAddressesModal(true)}
-            className="apple-btn-secondary hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-slate-200 text-xs font-medium transition shrink-0"
+            className="apple-btn-secondary hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[#f5f5f7] text-xs font-medium transition shrink-0"
             title="Bekijk de 12 gekoppelde adressen"
           >
-            <Building2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <Building2 className="w-3.5 h-3.5 text-[#2997ff] shrink-0" />
             <span>12 Adressen</span>
           </button>
 
@@ -1956,10 +1956,10 @@ export default function App() {
                   setIsAdminMode(true);
                   showToast('Directiemodus actief (verzenden als beheerder)');
                 }}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                   isAdminMode
-                    ? 'apple-btn-gold text-slate-950 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'apple-btn-primary text-white shadow-sm'
+                    : 'text-[#86868b] hover:text-white'
                 }`}
               >
                 <Shield className="w-3.5 h-3.5" />
@@ -1970,10 +1970,10 @@ export default function App() {
                   setIsAdminMode(false);
                   showToast('Partnermodus actief (ontvangstweergave)');
                 }}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                   !isAdminMode
                     ? 'bg-white/15 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-[#86868b] hover:text-white'
                 }`}
               >
                 <User className="w-3.5 h-3.5" />
@@ -1986,7 +1986,7 @@ export default function App() {
                 setAuthModalNotice('Log in of registreer een account om direct toegang te krijgen tot alle functies en bedragen.');
                 setShowAuthModal(true);
               }}
-              className="apple-btn-gold flex items-center gap-1.5 px-4 py-1.5 rounded-full text-slate-950 font-semibold text-xs shadow-md transition active:scale-95 shrink-0"
+              className="apple-btn-primary flex items-center gap-1.5 px-4 py-1.5 rounded-full text-white font-semibold text-xs shadow-md transition active:scale-95 shrink-0"
             >
               <User className="w-3.5 h-3.5" />
               <span>Inloggen / Registreren</span>
@@ -2714,22 +2714,22 @@ export default function App() {
             </aside>
 
             {/* Email Main Panel */}
-            <main className="flex-1 flex flex-col min-w-0 bg-slate-900">
-              <div className="p-2.5 sm:px-6 sm:py-3.5 border-b border-slate-800 bg-slate-900/90 flex flex-col gap-2">
+            <main className="flex-1 flex flex-col min-w-0 bg-black">
+              <div className="p-2.5 sm:px-6 sm:py-3.5 border-b border-white/[0.08] apple-glass flex flex-col gap-2">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <div className="flex-1 relative">
-                    <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Search className="w-4 h-4 text-[#86868b] absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Zoek op onderwerp, afzender of trefwoord..."
-                      className="w-full pl-9 pr-8 py-1.5 sm:py-2 bg-slate-950 rounded-xl text-xs sm:text-sm text-slate-200 placeholder:text-slate-500 border border-slate-800 focus:border-amber-500 focus:outline-none transition"
+                      className="w-full pl-10 pr-8 py-2 bg-white/[0.05] rounded-full text-xs sm:text-sm text-[#f5f5f7] placeholder:text-[#86868b] border border-white/10 focus:border-[#0071e3] focus:outline-none transition shadow-[inset_0_1px_1px_rgba(0,0,0,0.4)]"
                     />
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery('')}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-white"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#86868b] hover:text-white"
                       >
                         ✕
                       </button>
@@ -2738,32 +2738,32 @@ export default function App() {
 
                   <button
                     onClick={() => setIsFilterModalOpen(true)}
-                    className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold transition shrink-0 border ${
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-medium transition shrink-0 border ${
                       hasActiveAdvancedFilters
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
-                        : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
+                        ? 'bg-[#0071e3]/20 text-[#2997ff] border-[#0071e3]/40 shadow-sm'
+                        : 'apple-btn-secondary'
                     }`}
                     title="Open geavanceerde e-mail filters (datumbereik, bijlagen)"
                   >
-                    <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400" />
+                    <SlidersHorizontal className="w-3.5 h-3.5 text-[#2997ff]" />
                     <span className="hidden sm:inline">Advanced Filter</span>
                     <span className="sm:hidden">Filter</span>
                     {hasActiveAdvancedFilters && (
-                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#2997ff] animate-pulse shrink-0" />
                     )}
                   </button>
 
                   <button
                     onClick={handleMarkAllRead}
-                    className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium transition shrink-0"
+                    className="apple-btn-secondary flex items-center gap-1 px-3.5 py-2 rounded-full text-xs font-medium transition shrink-0"
                   >
-                    <CheckCheck className="w-3.5 h-3.5 text-amber-400" />
+                    <CheckCheck className="w-3.5 h-3.5 text-[#30d158]" />
                     <span className="hidden sm:inline">Alles Gelezen</span>
                   </button>
 
                   <button
                     onClick={() => setShowDeleteAllModal(true)}
-                    className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-800 hover:bg-rose-950/70 text-slate-300 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 text-xs font-medium transition shrink-0"
+                    className="flex items-center gap-1 px-3.5 py-2 rounded-full bg-white/[0.04] hover:bg-rose-950/40 text-slate-300 hover:text-rose-300 border border-white/10 hover:border-rose-500/30 text-xs font-medium transition shrink-0"
                     title="Verwijder alle berichten uit de postvakken"
                   >
                     <Trash2 className="w-3.5 h-3.5 text-rose-400" />
