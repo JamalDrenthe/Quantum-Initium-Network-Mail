@@ -1918,10 +1918,10 @@ export default function App() {
             <button
               onClick={handleAmountClick}
               className="apple-btn-secondary flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[#2997ff] text-xs font-semibold transition-all active:scale-95 shrink-0"
-              title="Bedragen zijn afgeschermd. Klik om in te loggen of te registreren."
+              title="Bedragen zijn veilig met 👁️. Klik om in te loggen of te registreren."
             >
               <span className="text-sm">👁️</span>
-              <span className="hidden sm:inline">Bedragen Verborgen</span>
+              <span className="hidden sm:inline">Bedragen Veilig</span>
             </button>
           )}
 

@@ -111,7 +111,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   ? showAmounts
                     ? 'Bedragen zijn zichtbaar (klik om te verbergen)'
                     : 'Bedragen zijn verborgen (klik om te tonen)'
-                  : 'Bedragen zijn afgeschermd met 👁️. Klik om in te loggen of registreren.'
+                  : 'Bedragen zijn veilig met 👁️. Klik om in te loggen of registreren.'
               }
             >
               <span className="text-xs">👁️</span>
@@ -120,7 +120,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   ? showAmounts
                     ? 'Bedragen Zichtbaar'
                     : 'Bedragen Verborgen'
-                  : 'Bedragen Afgeschermd'}
+                  : 'Bedragen Veilig'}
               </span>
             </button>
 
@@ -300,7 +300,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <div className="apple-glass-card rounded-3xl p-5 sm:p-6">
               <p className="text-3xl sm:text-4xl font-semibold tracking-tight text-white flex items-center gap-1.5">
                 <span>👁️</span>
-                <span className="text-2xl sm:text-3xl">Afgeschermd</span>
+                <span className="text-2xl sm:text-3xl">Veilig</span>
               </p>
               <p className="text-[11px] font-semibold tracking-wider uppercase text-[#2997ff] mt-1.5">
                 Financiële Privacy
