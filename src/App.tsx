@@ -5,7 +5,8 @@ import {
   Settings, ChevronRight, AlertCircle, Trash2, Lock,
   Copy, CheckCircle2, Layers, FileText, PanelLeftClose,
   PanelLeftOpen, Menu, Filter, RefreshCw, X, LogOut, Reply,
-  Pin, PinOff, ExternalLink, Bookmark, SlidersHorizontal, Calendar, Archive
+  Pin, PinOff, ExternalLink, Bookmark, SlidersHorizontal, Calendar, Archive,
+  Home
 } from 'lucide-react';
 
 import {
@@ -37,6 +38,7 @@ import {
 } from './constants.ts';
 import { QuantumLogo } from './components/QuantumLogo.tsx';
 import { AuthPage } from './components/AuthPage.tsx';
+import { LandingPage } from './components/LandingPage.tsx';
 
 const DRAFT_STORAGE_KEY = 'qin_compose_draft';
 
@@ -664,6 +666,21 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
 
+  const [currentView, setCurrentView] = useState<'landing' | 'app'>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const v = params.get('view');
+        if (v === 'app') return 'app';
+        if (v === 'landing') return 'landing';
+        if (window.location.hash === '#app') return 'app';
+        const wasLoggedIn = localStorage.getItem('qin_logged_in') === 'true';
+        if (wasLoggedIn) return 'app';
+      }
+    } catch {}
+    return 'landing';
+  });
+
   const [showAmounts, setShowAmounts] = useState<boolean>(false);
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [authModalNotice, setAuthModalNotice] = useState<string>('');
@@ -711,6 +728,7 @@ export default function App() {
       setSelectedCompanyFilter(userData.companyId);
     }
     setIsLoggedIn(true);
+    setCurrentView('app');
     setShowAuthModal(false);
     setShowAmounts(true);
     try {
@@ -1717,6 +1735,61 @@ export default function App() {
     );
   }, [chats, activeChatChannel]);
 
+  if (currentView === 'landing') {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased select-none">
+        {toastMessage && (
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border bg-slate-900/95 backdrop-blur-md text-slate-100 border-amber-500/30 transition-all duration-300">
+            {toastMessage.type === 'error' ? (
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            ) : (
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            )}
+            <span className="text-xs sm:text-sm font-medium text-slate-200">{toastMessage.msg}</span>
+          </div>
+        )}
+
+        <LandingPage
+          onEnterApp={() => {
+            setCurrentView('app');
+            try {
+              window.history.pushState(null, '', '?view=app');
+            } catch {}
+          }}
+          onOpenCompanyInbox={(companyId) => {
+            setSelectedCompanyFilter(companyId);
+            setCurrentView('app');
+            try {
+              window.history.pushState(null, '', `?view=app&company=${companyId}`);
+            } catch {}
+          }}
+          onOpenLogin={() => {
+            setAuthModalNotice(
+              'Log in of registreer een account om direct toegang te krijgen tot alle 12 netwerkbedrijven en vertrouwelijke financiële data.'
+            );
+            setShowAuthModal(true);
+          }}
+          isLoggedIn={isLoggedIn}
+          userName={userName}
+          showAmounts={showAmounts}
+          onToggleAmounts={handleAmountClick}
+        />
+
+        {showAuthModal && (
+          <AuthPage
+            isModal
+            bannerNotice={authModalNotice}
+            onSuccessLogin={(userData) => {
+              handleSuccessLogin(userData);
+              setCurrentView('app');
+            }}
+            onClose={() => setShowAuthModal(false)}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen h-screen flex flex-col bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden select-none">
       {toastMessage && (
@@ -1742,7 +1815,16 @@ export default function App() {
             <Menu className="w-4 h-4" />
           </button>
 
-          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <button
+            onClick={() => {
+              setCurrentView('landing');
+              try {
+                window.history.pushState(null, '', '?view=landing');
+              } catch {}
+            }}
+            className="flex items-center gap-2 sm:gap-2.5 min-w-0 text-left hover:opacity-85 transition cursor-pointer"
+            title="Ga naar overzicht / landingspagina"
+          >
             <QuantumLogo size={30} className="shrink-0" />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -1757,7 +1839,7 @@ export default function App() {
                 Zakelijke communicatiehub
               </p>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Center View Switcher */}
@@ -1844,6 +1926,20 @@ export default function App() {
           )}
 
           <button
+            onClick={() => {
+              setCurrentView('landing');
+              try {
+                window.history.pushState(null, '', '?view=landing');
+              } catch {}
+            }}
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition shrink-0"
+            title="Terug naar overzicht en landingspagina"
+          >
+            <Home className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span>Landingspagina</span>
+          </button>
+
+          <button
             onClick={() => setShowAddressesModal(true)}
             className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition shrink-0"
             title="Bekijk de 12 gekoppelde adressen"
@@ -1926,6 +2022,22 @@ export default function App() {
 
             {/* Drawer Actions */}
             <div className="p-3 border-b border-slate-800 space-y-2">
+              <button
+                onClick={() => {
+                  setIsMobileDrawerOpen(false);
+                  setCurrentView('landing');
+                  try {
+                    window.history.pushState(null, '', '?view=landing');
+                  } catch {}
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-xs font-semibold transition"
+              >
+                <div className="flex items-center gap-2">
+                  <Home className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Naar Landingspagina</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-amber-500/50" />
+              </button>
               {!isLoggedIn && (
                 <div className="space-y-2 mb-2 pb-2 border-b border-slate-800/80">
                   <button
