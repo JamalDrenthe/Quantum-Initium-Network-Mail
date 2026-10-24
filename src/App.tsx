@@ -1737,7 +1737,7 @@ export default function App() {
 
   if (currentView === 'landing') {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-100 font-sans antialiased select-none">
+      <div className="min-h-screen bg-[#030712] text-slate-100 font-sans antialiased select-none">
         {toastMessage && (
           <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border bg-slate-900/95 backdrop-blur-md text-slate-100 border-amber-500/30 transition-all duration-300">
             {toastMessage.type === 'error' ? (
@@ -1791,7 +1791,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen h-screen flex flex-col bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden select-none">
+    <div className="min-h-screen h-screen flex flex-col bg-[#030712] text-slate-100 font-sans antialiased overflow-hidden select-none">
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border bg-slate-900/95 backdrop-blur-md text-slate-100 border-amber-500/30 transition-all duration-300">
           {toastMessage.type === 'error' ? (
@@ -1803,13 +1803,13 @@ export default function App() {
         </div>
       )}
 
-      {/* Top Navigation Bar: Executive Navy & Gold Theme */}
-      <header className="h-16 bg-slate-900/90 backdrop-blur-md px-2.5 sm:px-4 md:px-6 flex items-center justify-between border-b border-slate-800/80 shrink-0 z-30 gap-2 sm:gap-4 min-w-0 w-full">
+      {/* Top Navigation Bar: Apple macOS / iOS Frosted Glass Theme */}
+      <header className="h-16 apple-glass px-2.5 sm:px-4 md:px-6 flex items-center justify-between border-b border-white/[0.08] shrink-0 z-30 gap-2 sm:gap-4 min-w-0 w-full transition-all">
         {/* Left Branding Group */}
         <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink-0">
           <button
             onClick={() => setIsMobileDrawerOpen((prev) => !prev)}
-            className="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white flex items-center justify-center border border-slate-700/60 transition shrink-0"
+            className="w-9 h-9 rounded-full bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white flex items-center justify-center border border-white/10 transition active:scale-95 shrink-0"
             title="Menu openen (Instellingen, Voorbeeld & Postvakken)"
           >
             <Menu className="w-4 h-4" />
@@ -1828,10 +1828,10 @@ export default function App() {
             <QuantumLogo size={30} className="shrink-0" />
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="font-bold text-xs xs:text-sm sm:text-base tracking-tight text-white font-['Plus_Jakarta_Sans'] truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none">
+                <span className="font-semibold text-xs xs:text-sm sm:text-base tracking-[-0.02em] text-white truncate max-w-[100px] xs:max-w-[130px] sm:max-w-none">
                   Quantum Initium
                 </span>
-                <span className="hidden md:inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shrink-0">
+                <span className="hidden md:inline-block text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-white/[0.05] text-amber-300 border border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)] shrink-0">
                   Centrale Hub
                 </span>
               </div>
@@ -1842,13 +1842,13 @@ export default function App() {
           </button>
         </div>
 
-        {/* Center View Switcher */}
-        <div className="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/60 shrink-0">
+        {/* Center View Switcher: Apple Segmented Pill */}
+        <div className="flex items-center bg-white/[0.05] p-1 rounded-full border border-white/10 shrink-0 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
           <button
             onClick={() => setActiveTab('mail')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'mail'
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md'
+                ? 'apple-btn-gold text-slate-950 shadow-md'
                 : 'text-slate-300 hover:text-white'
             }`}
             title="QI Mail postvak"
@@ -1867,9 +1867,9 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab('chat')}
-            className={`flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-2.5 py-1 sm:px-4 rounded-full text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'chat'
-                ? 'bg-emerald-500 text-slate-950 font-bold shadow-md'
+                ? 'bg-emerald-400 text-slate-950 font-bold shadow-md'
                 : 'text-slate-300 hover:text-white'
             }`}
             title="QI Chat kanalen"
@@ -1878,7 +1878,7 @@ export default function App() {
             <span className="hidden sm:inline">QI Chat</span>
             <span className="sm:hidden text-xs">Chat</span>
             <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-              activeTab === 'chat' ? 'bg-slate-950 text-emerald-300' : 'bg-slate-700 text-slate-300'
+              activeTab === 'chat' ? 'bg-slate-950 text-emerald-300' : 'bg-white/10 text-slate-300'
             }`}>
               {chats.length}
             </span>
@@ -1886,9 +1886,9 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab('split')}
-            className={`hidden xl:flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+            className={`hidden xl:flex items-center gap-2 px-4 py-1 rounded-full text-xs sm:text-sm font-semibold transition-all ${
               activeTab === 'split'
-                ? 'bg-indigo-500 text-white font-semibold shadow-md'
+                ? 'bg-indigo-500 text-white shadow-md'
                 : 'text-slate-300 hover:text-white'
             }`}
             title="Email en chat overzichtelijk naast elkaar"
@@ -1898,16 +1898,16 @@ export default function App() {
           </button>
         </div>
 
-        {/* Right Controls */}
+        {/* Right Controls: Apple Squircle & Pill Buttons */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Eye Bedragen Toggle / Status Button */}
           {isLoggedIn ? (
             <button
               onClick={handleAmountClick}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-semibold transition shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-semibold transition-all active:scale-95 shrink-0 ${
                 showAmounts
-                  ? 'bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-500/40 text-emerald-300'
-                  : 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-500/40 text-amber-300'
+                  ? 'bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-500/40 text-emerald-300 shadow-sm'
+                  : 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-500/40 text-amber-300 shadow-sm'
               }`}
               title={showAmounts ? 'Klik op 👁️ om bedragen te verbergen' : 'Klik op 👁️ om bedragen te tonen'}
             >
@@ -1917,7 +1917,7 @@ export default function App() {
           ) : (
             <button
               onClick={handleAmountClick}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/35 text-amber-300 text-xs font-semibold transition shrink-0"
+              className="apple-btn-secondary flex items-center gap-1.5 px-3 py-1.5 rounded-full text-amber-300 text-xs font-semibold transition-all active:scale-95 shrink-0"
               title="Bedragen zijn afgeschermd. Klik om in te loggen of te registreren."
             >
               <span className="text-sm">👁️</span>
@@ -1932,7 +1932,7 @@ export default function App() {
                 window.history.pushState(null, '', '?view=landing');
               } catch {}
             }}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition shrink-0"
+            className="apple-btn-secondary hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-slate-200 text-xs font-medium transition shrink-0"
             title="Terug naar overzicht en landingspagina"
           >
             <Home className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -1941,7 +1941,7 @@ export default function App() {
 
           <button
             onClick={() => setShowAddressesModal(true)}
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition shrink-0"
+            className="apple-btn-secondary hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-slate-200 text-xs font-medium transition shrink-0"
             title="Bekijk de 12 gekoppelde adressen"
           >
             <Building2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -1950,15 +1950,15 @@ export default function App() {
 
           {isLoggedIn ? (
             /* Directie / Partner Toggle */
-            <div className="hidden md:flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700/60 shrink-0">
+            <div className="hidden md:flex items-center bg-white/[0.05] rounded-full p-1 border border-white/10 shrink-0">
               <button
                 onClick={() => {
                   setIsAdminMode(true);
                   showToast('Directiemodus actief (verzenden als beheerder)');
                 }}
-                className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
                   isAdminMode
-                    ? 'bg-amber-500 text-slate-950 font-semibold shadow-sm'
+                    ? 'apple-btn-gold text-slate-950 shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -1970,9 +1970,9 @@ export default function App() {
                   setIsAdminMode(false);
                   showToast('Partnermodus actief (ontvangstweergave)');
                 }}
-                className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold transition-all ${
                   !isAdminMode
-                    ? 'bg-slate-700 text-white font-semibold shadow-sm'
+                    ? 'bg-white/15 text-white shadow-sm'
                     : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
@@ -1986,7 +1986,7 @@ export default function App() {
                 setAuthModalNotice('Log in of registreer een account om direct toegang te krijgen tot alle functies en bedragen.');
                 setShowAuthModal(true);
               }}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition active:scale-95 shrink-0"
+              className="apple-btn-gold flex items-center gap-1.5 px-4 py-1.5 rounded-full text-slate-950 font-semibold text-xs shadow-md transition active:scale-95 shrink-0"
             >
               <User className="w-3.5 h-3.5" />
               <span>Inloggen / Registreren</span>
@@ -2002,26 +2002,26 @@ export default function App() {
             onClick={() => setIsMobileDrawerOpen(false)}
             className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"
           />
-          <div className="relative w-4/5 max-w-xs bg-slate-950 border-r border-slate-800 h-full flex flex-col z-10 shadow-2xl overflow-hidden">
+          <div className="relative w-[85%] max-w-sm apple-glass border-r border-white/10 h-full flex flex-col z-10 shadow-[0_25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
             {/* Drawer Header */}
-            <div className="p-3.5 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
-              <div className="flex items-center gap-2">
+            <div className="p-4 border-b border-white/[0.08] flex items-center justify-between bg-black/40">
+              <div className="flex items-center gap-2.5">
                 <QuantumLogo size={28} />
                 <div>
-                  <h3 className="font-bold text-sm text-white">Quantum Initium</h3>
-                  <p className="text-[10px] text-amber-300">12 Zakelijke Postvakken</p>
+                  <h3 className="font-semibold text-sm text-white tracking-tight">Quantum Initium</h3>
+                  <p className="text-[10px] font-medium text-amber-300/90">12 Zakelijke Postvakken</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsMobileDrawerOpen(false)}
-                className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white"
+                className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-slate-300 hover:text-white flex items-center justify-center transition"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Drawer Actions */}
-            <div className="p-3 border-b border-slate-800 space-y-2">
+            <div className="p-3.5 border-b border-white/[0.08] space-y-2.5">
               <button
                 onClick={() => {
                   setIsMobileDrawerOpen(false);
@@ -2030,7 +2030,7 @@ export default function App() {
                     window.history.pushState(null, '', '?view=landing');
                   } catch {}
                 }}
-                className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-xs font-semibold transition"
+                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl apple-btn-secondary text-amber-300 text-xs font-semibold transition"
               >
                 <div className="flex items-center gap-2">
                   <Home className="w-4 h-4 text-amber-400 shrink-0" />
@@ -2039,14 +2039,14 @@ export default function App() {
                 <ChevronRight className="w-3.5 h-3.5 text-amber-500/50" />
               </button>
               {!isLoggedIn && (
-                <div className="space-y-2 mb-2 pb-2 border-b border-slate-800/80">
+                <div className="space-y-2 mb-2 pb-2 border-b border-white/[0.08]">
                   <button
                     onClick={() => {
                       setIsMobileDrawerOpen(false);
                       setAuthModalNotice('Log in of registreer een account om alle netwerkfuncties en bedragen te ontgrendelen.');
                       setShowAuthModal(true);
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition"
+                    className="w-full apple-btn-gold flex items-center justify-center gap-2 py-2.5 px-3 rounded-full text-slate-950 font-semibold text-xs shadow-md transition"
                   >
                     <User className="w-4 h-4" />
                     <span>Inloggen of Registreren</span>
@@ -2056,7 +2056,7 @@ export default function App() {
                       setIsMobileDrawerOpen(false);
                       handleAmountClick();
                     }}
-                    className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-900 border border-amber-500/30 text-amber-300 font-semibold text-xs transition"
+                    className="w-full apple-btn-secondary flex items-center justify-center gap-2 py-2 px-3 rounded-full text-amber-300 font-semibold text-xs transition"
                   >
                     <span className="text-sm">👁️</span>
                     <span>Bedragen Ontgrendelen</span>
@@ -2333,7 +2333,7 @@ export default function App() {
                     setIsMobileDrawerOpen(false);
                     setShowAddressesModal(true);
                   }}
-                  className="py-2 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 flex items-center justify-center gap-1.5 transition"
+                  className="py-2.5 px-3 rounded-2xl apple-btn-secondary text-xs text-slate-200 flex items-center justify-center gap-1.5 transition"
                 >
                   <Building2 className="w-3.5 h-3.5 text-amber-400" />
                   <span>12 Adressen</span>
@@ -2344,7 +2344,7 @@ export default function App() {
                     setIsMobileDrawerOpen(false);
                     setShowProfileModal(true);
                   }}
-                  className="py-2 px-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-slate-300 flex items-center justify-center gap-1.5 transition"
+                  className="py-2.5 px-3 rounded-2xl apple-btn-secondary text-xs text-slate-200 flex items-center justify-center gap-1.5 transition"
                 >
                   <Settings className="w-3.5 h-3.5 text-amber-400" />
                   <span>Instellingen</span>
@@ -2357,7 +2357,7 @@ export default function App() {
                     setIsMobileDrawerOpen(false);
                     setShowDeleteAllModal(true);
                   }}
-                  className="p-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-rose-400 transition"
+                  className="p-2.5 rounded-2xl bg-white/[0.04] hover:bg-rose-950/40 border border-white/10 text-rose-400 transition"
                   title="Alles wissen"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -2366,7 +2366,7 @@ export default function App() {
                 {isLoggedIn ? (
                   <button
                     onClick={handleLogout}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-slate-300 hover:text-rose-300 text-xs font-semibold transition"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-2xl apple-btn-secondary text-slate-300 hover:text-rose-300 text-xs font-semibold transition"
                     title="Uitloggen"
                   >
                     <LogOut className="w-4 h-4" />
@@ -2379,7 +2379,7 @@ export default function App() {
                       setAuthModalNotice('Log in of registreer een account om direct toegang te krijgen tot alle functies en bedragen.');
                       setShowAuthModal(true);
                     }}
-                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition shadow-sm"
+                    className="flex-1 apple-btn-gold flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-full text-slate-950 text-xs font-bold transition shadow-sm"
                     title="Inloggen of Registreren"
                   >
                     <User className="w-4 h-4" />

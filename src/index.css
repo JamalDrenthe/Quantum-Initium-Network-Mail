@@ -1,14 +1,94 @@
 @import "tailwindcss";
 
-/* Sleek Luxury Scrollbars */
+/* Apple Human Interface Typography & Smooth Rendering */
+:root {
+  --apple-font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Plus Jakarta Sans", system-ui, sans-serif;
+  --apple-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--apple-font-stack);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--apple-font-stack);
+  letter-spacing: -0.011em;
+  background-color: #030712;
+  color: #f8fafc;
+}
+
+/* Apple Liquid Retina Frosted Glass Utilities */
+.apple-glass {
+  background: rgba(10, 14, 23, 0.75);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+.apple-glass-card {
+  background: radial-gradient(130% 100% at 50% 0%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%), rgba(8, 12, 20, 0.7);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.35s var(--apple-ease);
+}
+
+.apple-glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 20px 45px -12px rgba(0, 0, 0, 0.7), inset 0 1px 1px 0 rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+/* Apple-style Specular Pill Buttons */
+.apple-btn-gold {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  box-shadow: 0 2px 8px -1px rgba(245, 158, 11, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.45);
+  transition: all 0.2s var(--apple-ease);
+}
+
+.apple-btn-gold:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+.apple-btn-gold:active {
+  transform: scale(0.97);
+  filter: brightness(0.95);
+}
+
+.apple-btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.2s var(--apple-ease);
+}
+
+.apple-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.apple-btn-secondary:active {
+  transform: scale(0.97);
+}
+
+/* Sleek Apple-style Subdued Scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #334155 transparent;
+  scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 *::-webkit-scrollbar-track {
@@ -16,12 +96,13 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: rgba(148, 163, 184, 0.2);
   border-radius: 9999px;
+  transition: background 0.2s ease;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: #f59e0b;
+  background: rgba(245, 158, 11, 0.6);
 }
 
 *::-webkit-scrollbar-button {

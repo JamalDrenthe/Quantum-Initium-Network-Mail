@@ -330,12 +330,12 @@ export function AuthPage({
   };
 
   const renderCardContent = () => (
-    <div className="relative bg-slate-900/95 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur-xl p-5 sm:p-8">
+    <div className="relative apple-glass rounded-[2rem] border border-white/10 shadow-[0_30px_80px_rgba(0,0,0,0.85)] backdrop-blur-2xl p-6 sm:p-9 overflow-hidden">
       {onClose && (
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition border border-slate-700/60 shadow-md"
+          className="absolute top-5 right-5 z-20 w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-slate-300 hover:text-white transition flex items-center justify-center border border-white/10 shadow-sm"
           title="Sluiten en verdergaan als bezoeker"
         >
           <X className="w-4 h-4" />
@@ -343,60 +343,60 @@ export function AuthPage({
       )}
 
       {bannerNotice && (
-        <div className="mb-5 p-3.5 rounded-2xl bg-amber-500/15 border border-amber-500/35 text-amber-200 text-xs sm:text-sm flex items-start gap-2.5 shadow-sm">
+        <div className="mb-6 p-4 rounded-2xl bg-amber-500/15 border border-amber-500/35 text-amber-200 text-xs sm:text-sm flex items-start gap-3 shadow-sm">
           <span className="text-base shrink-0 mt-0.5">👁️</span>
           <span className="leading-snug">{bannerNotice}</span>
         </div>
       )}
 
       {/* Header Badge */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 mb-3 shadow-inner">
+      <div className="text-center mb-7">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/[0.05] border border-white/10 mb-3.5 shadow-inner">
           <QuantumLogo size={32} />
         </div>
-        <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight font-['Plus_Jakarta_Sans']">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white tracking-tight">
           {authMode === 'login' ? 'Inloggen bij Quantum Initium' : 'Nieuw Account Registreren'}
         </h1>
-        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+        <p className="text-xs sm:text-sm text-slate-400 mt-1.5">
           {authMode === 'login'
             ? 'Toegang tot alle 12 zakelijke postvakken en realtime QI Chat'
             : 'Word lid van het Quantum Initium ondernemersnetwerk'}
         </p>
       </div>
 
-            {/* Mode Switcher Tabs */}
-            <div className="grid grid-cols-2 p-1 bg-slate-950 rounded-2xl border border-slate-800 mb-6">
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode('login');
-                  setErrorMessage(null);
-                  setSuccessMessage(null);
-                }}
-                className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  authMode === 'login'
-                    ? 'bg-amber-500 text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                Inloggen
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode('register');
-                  setErrorMessage(null);
-                  setSuccessMessage(null);
-                }}
-                className={`py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                  authMode === 'register'
-                    ? 'bg-amber-500 text-slate-950 shadow-md'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                Registreren
-              </button>
-            </div>
+      {/* Mode Switcher Tabs */}
+      <div className="grid grid-cols-2 p-1 bg-white/[0.05] rounded-full border border-white/10 mb-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.06)]">
+        <button
+          type="button"
+          onClick={() => {
+            setAuthMode('login');
+            setErrorMessage(null);
+            setSuccessMessage(null);
+          }}
+          className={`py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+            authMode === 'login'
+              ? 'apple-btn-gold text-slate-950 shadow-md'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          Inloggen
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setAuthMode('register');
+            setErrorMessage(null);
+            setSuccessMessage(null);
+          }}
+          className={`py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+            authMode === 'register'
+              ? 'apple-btn-gold text-slate-950 shadow-md'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          Registreren
+        </button>
+      </div>
 
             {/* Feedback Notifications */}
             {errorMessage && (
@@ -482,7 +482,7 @@ export function AuthPage({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition active:scale-98 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-full apple-btn-gold text-slate-950 font-semibold text-xs sm:text-sm shadow-lg transition active:scale-98 flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <span>Aanmelden verwerken...</span>
@@ -619,7 +619,7 @@ export function AuthPage({
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition active:scale-98 flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-full apple-btn-gold text-slate-950 font-semibold text-xs sm:text-sm shadow-lg transition active:scale-98 flex items-center justify-center gap-2"
                   >
                     {loading ? (
                       <span>Account aanmaken...</span>
@@ -650,7 +650,7 @@ export function AuthPage({
                 type="button"
                 onClick={handleGoogleLogin}
                 disabled={loading}
-                className="w-full py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-xs sm:text-sm font-semibold text-slate-200 transition flex items-center justify-center gap-2.5 shadow-sm"
+                className="w-full py-2.5 px-4 rounded-full apple-btn-secondary text-xs sm:text-sm font-medium text-slate-200 transition flex items-center justify-center gap-2.5 shadow-sm"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path
@@ -677,7 +677,7 @@ export function AuthPage({
                 <button
                   type="button"
                   onClick={() => handleQuickDemoAccess('Directie', 'quantum_initium')}
-                  className="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-amber-500/30 text-amber-300 text-xs font-semibold transition flex items-center justify-center gap-1.5"
+                  className="py-2.5 px-3 rounded-full apple-btn-secondary text-amber-300 text-xs font-semibold transition flex items-center justify-center gap-1.5"
                 >
                   <Shield className="w-3.5 h-3.5 text-amber-400" />
                   <span>Directie Demo Toegang</span>
@@ -685,7 +685,7 @@ export function AuthPage({
                 <button
                   type="button"
                   onClick={() => handleQuickDemoAccess('Partner', 'investbotiq')}
-                  className="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 text-xs font-semibold transition flex items-center justify-center gap-1.5"
+                  className="py-2.5 px-3 rounded-full apple-btn-secondary text-slate-300 text-xs font-semibold transition flex items-center justify-center gap-1.5"
                 >
                   <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
                   <span>Partner Demo Toegang</span>
@@ -720,7 +720,7 @@ export function AuthPage({
           {COMPANIES.map((comp) => (
             <span
               key={comp.id}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-[10px] text-slate-300"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[10px] text-slate-300"
             >
               <span
                 className="w-1.5 h-1.5 rounded-full"
@@ -736,7 +736,7 @@ export function AuthPage({
 
   if (isModal || onClose) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-950/85 backdrop-blur-md">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/80 backdrop-blur-2xl">
         <div className="relative w-full max-w-xl my-auto">
           {renderCard()}
         </div>
@@ -745,7 +745,7 @@ export function AuthPage({
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 font-['Inter',sans-serif] relative overflow-hidden">
+    <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col justify-between selection:bg-amber-400 selection:text-slate-950 font-sans relative overflow-hidden">
       {/* Background Decorative Glows */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
