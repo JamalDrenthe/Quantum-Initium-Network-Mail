@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {
   Lock, Mail, User, Shield, Building2, CheckCircle2,
   ArrowRight, Eye, EyeOff, UserCheck, AlertCircle, KeyRound,
-  Briefcase, Check
+  Briefcase, Check, X
 } from 'lucide-react';
 import {
   signInWithEmailAndPassword,
@@ -16,7 +16,7 @@ import { auth, db } from '../firebase.ts';
 import { COMPANIES } from '../constants.ts';
 import { QuantumLogo } from './QuantumLogo.tsx';
 
-interface AuthPageProps {
+export interface AuthPageProps {
   onSuccessLogin: (userData: {
     uid: string;
     name: string;
@@ -25,10 +25,20 @@ interface AuthPageProps {
     role: string;
     companyId: string;
   }) => void;
+  onClose?: () => void;
+  isModal?: boolean;
+  bannerNotice?: string;
+  initialMode?: 'login' | 'register';
 }
 
-export function AuthPage({ onSuccessLogin }: AuthPageProps) {
-  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+export function AuthPage({
+  onSuccessLogin,
+  onClose,
+  isModal = false,
+  bannerNotice,
+  initialMode = 'login'
+}: AuthPageProps) {
+  const [authMode, setAuthMode] = useState<'login' | 'register'>(initialMode);
 
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -319,59 +329,40 @@ export function AuthPage({ onSuccessLogin }: AuthPageProps) {
     }, 400);
   };
 
-  return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 font-['Inter',sans-serif] relative overflow-hidden">
-      {/* Background Decorative Glows */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-slate-900/40 rounded-full blur-3xl pointer-events-none" />
+  const renderCardContent = () => (
+    <div className="relative bg-slate-900/95 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur-xl p-5 sm:p-8">
+      {onClose && (
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-4 right-4 z-20 p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white transition border border-slate-700/60 shadow-md"
+          title="Sluiten en verdergaan als bezoeker"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
 
-      {/* Top Header */}
-      <header className="px-3 sm:px-8 py-3.5 sm:py-5 flex items-center justify-between border-b border-slate-900/80 bg-slate-950/70 backdrop-blur-md relative z-10 gap-2 min-w-0">
-        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-          <QuantumLogo size={32} className="shrink-0" />
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="font-bold text-sm sm:text-lg tracking-tight text-white font-['Plus_Jakarta_Sans'] truncate">
-                Quantum Initium
-              </span>
-              <span className="hidden xs:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shrink-0">
-                Centrale Hub
-              </span>
-            </div>
-            <p className="text-[11px] sm:text-xs text-slate-400 truncate hidden sm:block">
-              Communicatieplatform voor directie en partners
-            </p>
-          </div>
+      {bannerNotice && (
+        <div className="mb-5 p-3.5 rounded-2xl bg-amber-500/15 border border-amber-500/35 text-amber-200 text-xs sm:text-sm flex items-start gap-2.5 shadow-sm">
+          <span className="text-base shrink-0 mt-0.5">👁️</span>
+          <span className="leading-snug">{bannerNotice}</span>
         </div>
+      )}
 
-        <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300">
-            <Shield className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Beveiligde SSL Verbinding</span>
-          </div>
+      {/* Header Badge */}
+      <div className="text-center mb-6">
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 mb-3 shadow-inner">
+          <QuantumLogo size={32} />
         </div>
-      </header>
-
-      {/* Main Content Area */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10">
-        <div className="w-full max-w-xl">
-          {/* Card Container */}
-          <div className="bg-slate-900/90 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur-xl p-6 sm:p-8">
-            {/* Header Badge */}
-            <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-amber-500/15 border border-amber-500/30 mb-3 shadow-inner">
-                <QuantumLogo size={32} />
-              </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight font-['Plus_Jakarta_Sans']">
-                {authMode === 'login' ? 'Inloggen bij Quantum Initium' : 'Nieuw Account Registreren'}
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-400 mt-1">
-                {authMode === 'login'
-                  ? 'Toegang tot alle 12 zakelijke postvakken en realtime QI Chat'
-                  : 'Word lid van het Quantum Initium ondernemersnetwerk'}
-              </p>
-            </div>
+        <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight font-['Plus_Jakarta_Sans']">
+          {authMode === 'login' ? 'Inloggen bij Quantum Initium' : 'Nieuw Account Registreren'}
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          {authMode === 'login'
+            ? 'Toegang tot alle 12 zakelijke postvakken en realtime QI Chat'
+            : 'Word lid van het Quantum Initium ondernemersnetwerk'}
+        </p>
+      </div>
 
             {/* Mode Switcher Tabs */}
             <div className="grid grid-cols-2 p-1 bg-slate-950 rounded-2xl border border-slate-800 mb-6">
@@ -701,29 +692,95 @@ export function AuthPage({ onSuccessLogin }: AuthPageProps) {
                 </button>
               </div>
             </div>
-          </div>
+    </div>
+  );
 
-          {/* 12 Network Entities Badges Footer */}
-          <div className="mt-6 text-center">
-            <p className="text-[11px] text-slate-400 font-medium mb-3">
-              Gekoppeld aan de 12 centrale ondernemingen van het netwerk
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-1.5">
-              {COMPANIES.map((comp) => (
-                <span
-                  key={comp.id}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-[10px] text-slate-300"
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ backgroundColor: comp.color }}
-                  />
-                  <span>{comp.name}</span>
-                </span>
-              ))}
+  const renderCard = () => (
+    <div className="w-full max-w-xl">
+      {renderCardContent()}
+
+      {onClose && (
+        <div className="mt-4 text-center">
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-xs text-slate-400 hover:text-amber-300 transition underline underline-offset-4"
+          >
+            Verder bladeren als bezoeker (bedragen blijven afgeschermd)
+          </button>
+        </div>
+      )}
+
+      {/* 12 Network Entities Badges Footer */}
+      <div className="mt-5 text-center">
+        <p className="text-[11px] text-slate-400 font-medium mb-2.5">
+          Gekoppeld aan de 12 centrale ondernemingen van het netwerk
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-1.5">
+          {COMPANIES.map((comp) => (
+            <span
+              key={comp.id}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900/80 border border-slate-800 text-[10px] text-slate-300"
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: comp.color }}
+              />
+              <span>{comp.name}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+
+  if (isModal || onClose) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-slate-950/85 backdrop-blur-md">
+        <div className="relative w-full max-w-xl my-auto">
+          {renderCard()}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950 font-['Inter',sans-serif] relative overflow-hidden">
+      {/* Background Decorative Glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-slate-900/40 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Top Header */}
+      <header className="px-3 sm:px-8 py-3.5 sm:py-5 flex items-center justify-between border-b border-slate-900/80 bg-slate-950/70 backdrop-blur-md relative z-10 gap-2 min-w-0">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+          <QuantumLogo size={32} className="shrink-0" />
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-bold text-sm sm:text-lg tracking-tight text-white font-['Plus_Jakarta_Sans'] truncate">
+                Quantum Initium
+              </span>
+              <span className="hidden xs:inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30 shrink-0">
+                Centrale Hub
+              </span>
             </div>
+            <p className="text-[11px] sm:text-xs text-slate-400 truncate hidden sm:block">
+              Communicatieplatform voor directie en partners
+            </p>
           </div>
         </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300">
+            <Shield className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Beveiligde SSL Verbinding</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative z-10">
+        {renderCard()}
       </main>
 
       {/* Footer Info */}

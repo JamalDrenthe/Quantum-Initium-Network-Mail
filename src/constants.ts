@@ -435,7 +435,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'Quantum Initium Directie',
     isAdmin: true,
-    text: 'Goedemorgen directie en partners. De geconsolideerde kwartaalcijfers zijn beschikbaar gesteld in het centrale directiedossier.',
+    text: 'Goedemorgen directie en partners. De geconsolideerde holdingomzet van € 14.280.000,- is definitief vastgesteld in het directiedossier.',
     timestamp: Date.now() - 1000 * 60 * 350,
     status: 'read'
   },
@@ -445,7 +445,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'Immigratiepunt Relocatieteam',
     isAdmin: true,
-    text: 'Update IND-portaal: De nieuwe kennismigrantencriteria voor 2026 zijn van kracht. Alle lopende aanvragen zijn getoetst en akkoord.',
+    text: 'Update IND-portaal: De nieuwe kennismigrantencriteria voor 2026 zijn van kracht. Minimum bruto maandsalaris bedraagt € 5.670,-.',
     timestamp: Date.now() - 1000 * 60 * 320,
     status: 'read'
   },
@@ -455,7 +455,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'VVC Bestuur',
     isAdmin: true,
-    text: 'De voorinschrijving voor het nieuwe scale-up investeringssyndicaat is geopend en sluit komende vrijdag om 17:00 uur.',
+    text: 'De voorinschrijving voor het nieuwe scale-up investeringssyndicaat met een tranche van € 250.000,- is geopend en sluit vrijdag om 17:00 uur.',
     timestamp: Date.now() - 1000 * 60 * 290,
     status: 'read'
   },
@@ -465,7 +465,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'Investbotiq Trading Desk',
     isAdmin: true,
-    text: 'Kwantitatieve desk rapportage: De marktposities zijn conform de risicolimieten geherbalanceerd. Gemiddeld dagrendement: +0.42%.',
+    text: 'Kwantitatieve desk rapportage: Dagwinst van € 4.320,00 gerealiseerd op de liquiditeitsdesk. Rendement: +0.42%.',
     timestamp: Date.now() - 1000 * 60 * 260,
     status: 'read'
   },
@@ -475,7 +475,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'Spontiva Hospitality',
     isAdmin: true,
-    text: 'De tafelschikking en cateringselectie voor de komende directielunch op landgoed Duin & Kruidberg zijn bevestigd.',
+    text: 'De tafelschikking voor de directielunch op Duin & Kruidberg is bevestigd. Arrangementprijs is vastgesteld op € 495,- p.p.',
     timestamp: Date.now() - 1000 * 60 * 230,
     status: 'read'
   },
@@ -485,7 +485,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'Boostplug Performance Team',
     isAdmin: true,
-    text: 'Resultaat wekelijkse leadcampagne: 34 nieuwe gekwalificeerde B2B-aanvragen zijn ingeladen in CRMos.',
+    text: 'Resultaat wekelijkse leadcampagne: 34 nieuwe gekwalificeerde B2B-leads ingeladen met een geschatte orderwaarde van € 34.200,-.',
     timestamp: Date.now() - 1000 * 60 * 200,
     status: 'read'
   },
@@ -495,7 +495,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'Zheavenzy Brand Management',
     isAdmin: true,
-    text: 'De nieuwe catalogus voor de exclusieve najaarscollectie is gereed voor partnervoorverkoop.',
+    text: 'Nieuwe luxe order #ZH-88921 ter waarde van € 12.850,00 is goedgekeurd voor verzekerde distributie via Logs Rent.',
     timestamp: Date.now() - 1000 * 60 * 170,
     status: 'read'
   },
@@ -545,7 +545,7 @@ export const INITIAL_CHATS_SEED: Omit<NetworkChat, 'id'>[] = [
     senderId: 'system_admin',
     senderName: 'WoningVry Acquisitieteam',
     isAdmin: true,
-    text: 'Nieuw off-market herenhuis in Amsterdam-Zuid opgenomen in het portfolio. Dossier staat gereed voor inzage.',
+    text: 'Nieuw off-market herenhuis Singel opgenomen in portfolio. Vraagprijs: € 1.850.000,- k.k. met 7.2% aanvangsrendement.',
     timestamp: Date.now() - 1000 * 60 * 20,
     status: 'read'
   }
@@ -566,9 +566,10 @@ export const SAMPLE_BUSINESS_EMAILS: Omit<NetworkEmail, 'id'>[] = [
 
 Hierbij ontvangt u de formele kwartaalrapportage van Quantum Initium Holding.
 
-Belangrijkste agendapunten:
-• Geconsolideerde omzet en resultaten over alle aangesloten ondernemingen
-• Voortgang van de centrale data-integratie en kwartaalplanning
+Belangrijkste financiële kerncijfers:
+• Geconsolideerde omzet holding: € 14.280.000,- over het afgelopen boekjaar
+• Gerealiseerde nettomarge: € 2.450.000,-
+• Beschikbare liquiditeitsreserve voor syndicaatspartnerships: € 5.800.000,-
 • Planning van de eerstvolgende fysieke aandeelhoudersbijeenkomst
 
 In de bijlage treft u de volledige financiële toelichting aan. Vragen kunnen direct worden gericht aan het directieteam via het centrale kanaal.
@@ -593,6 +594,11 @@ Hierbij informeren wij u over de afronding van het recente kennismigrantendossie
 
 De Immigratie- en Naturalisatiedienst (IND) heeft het dossier van de software specialist positief beoordeeld. Het tewerkstellingsvisum is officieel toegekend.
 
+Financiële en operationele specificaties:
+• Vastgesteld minimaal bruto maandsalaris kennismigrant: € 5.670,- per maand
+• Voldane IND behandelleges en garantstellingsdepot: € 3.850,-
+• Aanvullende relocatievergoeding en expathuisvesting via WoningVry
+
 Vervolgstappen:
 1. Afspraak inplannen voor biometrische registratie en uitreiking van de verblijfspas
 2. Huisvestingsbegeleiding opstarten via WoningVry
@@ -616,10 +622,11 @@ Team Immigratiepunt`,
 
 Hierbij ontvangt u de specificatie van uw persoonlijke kwartaaluitkering vanuit de Verdienende Vrienden Club.
 
-Overzicht:
-• Uitgekeerd dividend over lopende syndicaatsprojecten
+Overzicht financiële allocaties:
+• Uitgekeerd dividend over lopende syndicaatsprojecten: € 18.750,00 per participatie
+• Totale syndicaatuitkering Q4 over de aangesloten kring: € 450.000,00
+• Minimale instap voor het nieuwe scale-up fonds: € 25.000,00
 • Toelichting op de gezamenlijke allocaties met Investbotiq en WoningVry
-• Voorinschrijving geopend voor het nieuwe scale-up fonds
 
 U kunt uw allocatie bevestigen via de VVC-chatroom.
 
@@ -642,9 +649,11 @@ Bestuur Verdienende Vrienden Club`,
 Hierbij ontvangt u het overzicht van de kwantitatieve handelsdesk van Investbotiq.
 
 Systeemprestaties afgelopen periode:
+• Totale beheerde allocatie: € 4.500.000,00
 • Aantal uitgevoerde geautomatiseerde transacties: 342
 • Gemiddelde executiesnelheid: 14 milliseconden
-• Gerealiseerd netto rendement op allocatie: +1.84%
+• Gerealiseerd netto rendement op allocatie: +1.84% (totale nettowinst: € 82.800,00)
+• Gemiddelde dagwinst per geautomatiseerde cyclus: € 1.340,00
 
 Alle transacties zijn geverifieerd en vastgelegd conform het auditprotocol. De risicomodellen opereren binnen de gestelde bandbreedtes.
 
@@ -666,9 +675,11 @@ Investbotiq Trading Desk`,
 
 Namens Spontiva nodigen wij u van harte uit voor de exclusieve najaarsdirectielunch.
 
-Programma:
+Programma en condities:
 • Ontvangst met aperitief en informele netwerkreceptie
 • Viergangen walking dinner verzorgd door gerenommeerde chefs
+• Arrangementprijs inclusief champagnereceptie en privé chef: € 495,- p.p.
+• Exclusieve directietafel voor netwerkpartners (8 personen): € 3.960,- excl. btw
 • Strategische toelichting op de koers van het ondernemersnetwerk
 
 U kunt uw aanwezigheid bevestigen via het bijgevoegde VIP-toegangsbewijs of via het Spontiva chatkanaal.
@@ -691,9 +702,11 @@ Spontiva Events Team`,
 
 Hierbij ontvangt u de marketing-eindrapportage van de afgelopen campagneperiode.
 
-Resultaten:
+Resultaten en conversie:
 • 148 geverifieerde zakelijke leads direct doorgestuurd naar CRMos
-• Kosten per gekwalificeerde aanvraag gedaald met 22%
+• Gerealiseerde orderwaarde via gegenereerde leads: € 94.600,-
+• Totale mediabudgetten afgelopen maand: € 8.200,-
+• Netto acquisitiekosten per gekwalificeerde lead: € 55,40
 • Conversieratio op de landingspagina gestegen naar 6.4%
 
 Wenst u de mediabudgetten op te schalen voor de komende kwartaalcampagne? Neem gerust contact op via ons kanaal.
@@ -716,11 +729,11 @@ Boostplug Growth Desk`,
 
 Uw bestelling uit het Zheavenzy luxury segment is succesvol verwerkt en gereedgemaakt voor verzending.
 
-De artikelen worden discreet en verzekerd getransporteerd via Logs Rent transport.
-
-Details:
+Factuur- en leveringsdetails:
 • Ordernummer: ZH-88921
-• Verwachte bezorging: Binnen 24 uur op het gewenste kantooradres
+• Totaalbedrag factuur: € 12.850,00 (voldaan via zakelijke overschrijving)
+• Verzekerde verzendwaarde via Logs Rent transport: € 15.000,00
+• Verwachte bezorging: Binnen 24 uur op het gewenste directieadres
 • Certificaat van echtheid bijgevoegd in de zending
 
 Met stijlvolle groet,
@@ -741,9 +754,11 @@ Zheavenzy Luxury Concierge`,
 
 Hierbij ontvangt u de bevestiging van uw zakelijke wagenparkreservering via Logs Rent.
 
-Gereserveerd voertuig:
+Gereserveerd voertuig en tarieven:
 • Model: Mercedes-Benz Sprinter Executive Black Edition
 • Inzetperiode: Maandag t/m vrijdag
+• Maandelijks leasetarief: € 1.350,- excl. btw
+• Borgstelling via bedrijfsgarantie: € 2.500,-
 • Inclusief all-risk dekking en onbeperkte kilometers binnen de Benelux
 
 De digitale sleutel is geactiveerd in uw vlootaccount. Voor vragen kunt u terecht in het Logs Rent kanaal.
@@ -768,10 +783,12 @@ Hierbij ontvangt u de bevestiging van de technische integratie via CRMos.
 
 Uw API-koppeling met het centrale gegevensplatform is succesvol geconfigureerd. Gegevens tussen leadformulieren, offertes en facturatie synchroniseren conform het schema.
 
-Systeeminformatie:
+Systeeminformatie en verwerking:
 • Beschikbaarheid: 99.98% uptime afgelopen 30 dagen
+• Totale transactiewaarde verwerkt via CRMos gateways: € 1.840.000,-
+• Gemiddelde transactieomvang: € 382,50
 • Beveiliging: End-to-end encryptie actief
-• Verwerkte transacties vandaag: 4.812
+• Verwerkte API transacties vandaag: 4.812
 
 Voor ondersteuning bij geavanceerde webhooks staat ons engineering team klaar via QI Chat.
 
@@ -794,9 +811,11 @@ CRMos Systeembeheer`,
 Djobba heeft een gerichte selectie afgerond voor de openstaande directieposities.
 
 Drie gekwalificeerde profielen zijn beschikbaar voor een kennismaking:
-1. Senior Commercieel Directeur met 12 jaar B2B-ervaring
-2. Lead Cloud Architect gespecialiseerd in high-availability platforms
-3. Interim Financial Controller met ervaring in holdingstructuren
+1. Senior Commercieel Directeur (salarisindicatie: € 145.000,- per jaar)
+2. Lead Cloud Architect (salarisindicatie: € 120.000,- per jaar)
+3. Interim Financial Controller (uurtarief: € 135,- per uur)
+
+Vaste bemiddelingsfee executive placement: € 15.000,- per succesvolle plaatsing.
 
 In de bijlage treft u de geanonimiseerde profielen en assessments aan. Gesprekken kunnen direct worden gecoördineerd via onze chat.
 
@@ -818,8 +837,10 @@ Djobba Executive Search`,
 
 Hierbij ontvangt u de resultaten van de periodieke compliance-audit van Trusting Work.
 
-Auditresultaten:
+Auditresultaten en loonstatistieken:
 • Alle 84 arbeidsovereenkomsten binnen het netwerk voldoen aan de actuele wetgeving
+• Gecontroleerde geconsolideerde loonsom: € 3.420.000,-
+• Gemiddeld jaarsalaris binnen het netwerk: € 68.500,-
 • Verloningsprocessen en premieafdrachten zijn gecontroleerd en sluitend bevonden
 • Het officiële Compliance Certificaat 2026 is toegekend
 
@@ -843,10 +864,12 @@ Trusting Work Compliance`,
 
 Hierbij ontvangt u een exclusief off-market vastgoeddossier van WoningVry.
 
-Objectomschrijving:
+Objectomschrijving en financiële details:
 • Type: Monumentaal pand opgesplitst in 4 hoogwaardig verhuurde appartementen
-• Locatie: Amsterdam Centrum
-• Huidig netto huurrendement: 7.2% op jaarbasis
+• Locatie: Amsterdam Centrum (Singel)
+• Koopsom: € 1.850.000,- k.k.
+• Huidige jaarlijkse huuropbrengst: € 133.200,- (netto aanvangsrendement 7.2%)
+• Verwachte meerwaarde na splitsingsvergunning: € 320.000,-
 • Status: Volledig gerenoveerd en langdurig verhuurd aan expats
 
 Aangesloten netwerkpartners hebben 72 uur het eerste recht van koop. Bezichtigingen kunnen worden aangevraagd via ons chatkanaal.
@@ -864,7 +887,7 @@ export const INITIAL_PINNED_TOPICS_SEED: PinnedTopic[] = [
     emailId: 'mail-seed-1',
     emailSubject: 'Officiele uitnodiging: Quantum Initium Network Partner Strategiedag 2026',
     companyId: 'quantum_initium',
-    summary: 'Jaarlijkse strategiedag op landgoed Duin & Kruidberg op 18 november 2026.',
+    summary: 'Jaarlijkse strategiedag: Geconsolideerde omzet € 14.280.000,- en investeringskader Duin & Kruidberg.',
     pinnedBy: 'Directie Quantum Initium',
     timestamp: Date.now() - 1000 * 60 * 120
   },
@@ -874,7 +897,7 @@ export const INITIAL_PINNED_TOPICS_SEED: PinnedTopic[] = [
     emailId: 'mail-seed-2',
     emailSubject: 'Kwartaalupdate Kennismigranten en IND Wetgeving Q4',
     companyId: 'immigratiepunt',
-    summary: 'Versnelde procedure voor erkend referentschap en verhoogde salariscriteria per 2026.',
+    summary: 'Kennismigranten en IND: Salariscriterium vastgesteld op € 5.670,- per maand conform richtlijn 2026.',
     pinnedBy: 'Immigratiepunt Relocatie',
     timestamp: Date.now() - 1000 * 60 * 60
   }

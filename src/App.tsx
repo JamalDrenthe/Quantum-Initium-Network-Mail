@@ -101,11 +101,101 @@ const ALL_START_CHATS: NetworkChat[] = INITIAL_CHATS_SEED.map((item, index) => (
   id: `start_chat_${index}`
 }));
 
+const AMOUNT_REGEX = /(€\s*\d{1,3}(?:\.\d{3})*(?:,\d{2}|,-)?(?:\s*(?:k\.k\.|excl\.\s*btw|incl\.\s*btw|p\.p\.|per\s*(?:jaar|maand|participatie|uur)|\/mnd|-))?|EUR\s*\d{1,3}(?:\.\d{3})*(?:,\d{2}|,-)?)/gi;
+
+export const maskAmountString = (
+  text?: string,
+  isLoggedIn: boolean = false,
+  showAmounts: boolean = false
+): string => {
+  if (!text) return '';
+  if (isLoggedIn && showAmounts) return text;
+  return text.replace(AMOUNT_REGEX, '👁️ € ••••••');
+};
+
+interface FormattedAmountTextProps {
+  text: string;
+  isLoggedIn: boolean;
+  showAmounts: boolean;
+  onAmountClick: () => void;
+  className?: string;
+}
+
+export const FormattedAmountText: React.FC<FormattedAmountTextProps> = ({
+  text,
+  isLoggedIn,
+  showAmounts,
+  onAmountClick,
+  className
+}) => {
+  if (!text) return null;
+
+  const parts = text.split(AMOUNT_REGEX);
+
+  return (
+    <span className={className}>
+      {parts.map((part, idx) => {
+        if (!part) return null;
+        const isAmount = AMOUNT_REGEX.test(part);
+        AMOUNT_REGEX.lastIndex = 0;
+
+        if (!isAmount) {
+          return <React.Fragment key={idx}>{part}</React.Fragment>;
+        }
+
+        if (isLoggedIn && showAmounts) {
+          return (
+            <button
+              key={idx}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAmountClick();
+              }}
+              title="Bedrag zichtbaar (klik op 👁️ om te verbergen)"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 mx-0.5 rounded-md bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/35 text-[11px] sm:text-xs font-mono font-semibold cursor-pointer transition select-none align-baseline group"
+            >
+              <span className="text-xs">👁️</span>
+              <span className="underline decoration-emerald-500/40 underline-offset-2 font-bold">{part}</span>
+            </button>
+          );
+        }
+
+        return (
+          <button
+            key={idx}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAmountClick();
+            }}
+            title={
+              isLoggedIn
+                ? 'Klik op 👁️ om bedrag te tonen'
+                : 'Inloggen of registreren om bedragen te bekijken (👁️)'
+            }
+            className="inline-flex items-center gap-1 px-2 py-0.5 mx-0.5 rounded-md bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 text-[11px] sm:text-xs font-semibold cursor-pointer transition select-none shadow-sm align-baseline group"
+          >
+            <span className="text-xs">👁️</span>
+            <span className="tracking-widest font-mono text-amber-200/90 group-hover:text-amber-100">€ ••••••</span>
+            <span className="text-[10px] uppercase font-bold text-amber-400/90 ml-0.5 hidden xs:inline">
+              {isLoggedIn ? 'Toon' : 'Inloggen'}
+            </span>
+          </button>
+        );
+      })}
+    </span>
+  );
+};
+
 interface SwipableEmailCardProps {
   email: NetworkEmail;
   comp: Company;
   read: boolean;
   isPinnedInChat: boolean;
+  isLoggedIn: boolean;
+  showAmounts: boolean;
+  onAmountClick?: () => void;
   onOpen: (email: NetworkEmail) => void;
   onToggleRead: (email: NetworkEmail) => void;
   onArchive: (emailId: string) => void;
@@ -117,6 +207,9 @@ const SwipableEmailCard: React.FC<SwipableEmailCardProps> = ({
   comp,
   read,
   isPinnedInChat,
+  isLoggedIn,
+  showAmounts,
+  onAmountClick,
   onOpen,
   onToggleRead,
   onArchive,
@@ -332,7 +425,7 @@ const SwipableEmailCard: React.FC<SwipableEmailCardProps> = ({
           <div className="flex items-center justify-between gap-2 text-xs text-slate-400">
             <p className="line-clamp-1 text-slate-400 text-[12px] flex-1">
               <span className="text-slate-300 font-medium mr-1.5">{email.senderName}:</span>
-              {email.body?.replace(/\n/g, ' ')}
+              {maskAmountString(email.body?.replace(/\n/g, ' '), isLoggedIn, showAmounts)}
             </p>
             {email.attachment && (
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 text-[10px] text-slate-400 shrink-0">
@@ -406,7 +499,7 @@ const SwipableEmailCard: React.FC<SwipableEmailCardProps> = ({
               {email.subject}
             </span>
             <span className="hidden md:inline text-xs text-slate-500 truncate">
-              • {email.body?.replace(/\n/g, ' ')}
+              • {maskAmountString(email.body?.replace(/\n/g, ' '), isLoggedIn, showAmounts)}
             </span>
           </div>
 
@@ -571,6 +664,29 @@ export default function App() {
   const [toastMessage, setToastMessage] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
 
+  const [showAmounts, setShowAmounts] = useState<boolean>(false);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
+  const [authModalNotice, setAuthModalNotice] = useState<string>('');
+
+  const handleAmountClick = () => {
+    if (!isLoggedIn) {
+      setAuthModalNotice(
+        'Financiële bedragen zijn exclusief gereserveerd voor geregistreerde netwerkpartners. Log in of registreer een account om alle bedragen te ontgrendelen.'
+      );
+      setShowAuthModal(true);
+      showToast('Inloggen of registreren vereist om financiële bedragen te bekijken', 'error');
+    } else {
+      setShowAmounts((prev) => {
+        const next = !prev;
+        showToast(
+          next ? 'Bedragen zijn nu zichtbaar (👁️)' : 'Bedragen zijn verborgen (👁️)',
+          'success'
+        );
+        return next;
+      });
+    }
+  };
+
   const showToast = (msg: string, type: 'success' | 'error' = 'success') => {
     setToastMessage({ msg, type });
     setTimeout(() => {
@@ -595,6 +711,8 @@ export default function App() {
       setSelectedCompanyFilter(userData.companyId);
     }
     setIsLoggedIn(true);
+    setShowAuthModal(false);
+    setShowAmounts(true);
     try {
       localStorage.setItem('qin_logged_in', 'true');
       localStorage.setItem('qin_user_uid', userData.uid);
@@ -604,7 +722,9 @@ export default function App() {
       localStorage.setItem('qin_user_role', userData.role);
       localStorage.setItem('qin_user_company', userData.companyId || 'quantum_initium');
     } catch {}
-    showToast(`Welkom ${userData.name}! Ingelogd als ${userData.role}.`);
+    setShowProfileModal(false);
+    setIsMobileDrawerOpen(false);
+    showToast(`Welkom ${userData.name}! Bedragen zijn nu zichtbaar (👁️).`);
   };
 
   const handleLogout = async () => {
@@ -615,9 +735,10 @@ export default function App() {
       localStorage.removeItem('qin_logged_in');
     } catch {}
     setIsLoggedIn(false);
+    setShowAmounts(false);
     setShowProfileModal(false);
     setIsMobileDrawerOpen(false);
-    showToast('Je bent uitgelogd. Welkom terug op de inlogpagina.');
+    showToast('Je bent uitgelogd. Financiële bedragen zijn weer verborgen met 👁️.');
   };
 
   useEffect(() => {
@@ -1232,6 +1353,12 @@ export default function App() {
   };
 
   const handleOpenNewCompose = () => {
+    if (!isLoggedIn) {
+      setAuthModalNotice('Log in of registreer een account om nieuwe berichten te verzenden.');
+      setShowAuthModal(true);
+      showToast('Inloggen vereist om berichten te verzenden', 'error');
+      return;
+    }
     let restored = false;
     try {
       const savedStr = localStorage.getItem(DRAFT_STORAGE_KEY);
@@ -1274,6 +1401,12 @@ export default function App() {
   };
 
   const handleReplyEmail = (email: NetworkEmail) => {
+    if (!isLoggedIn) {
+      setAuthModalNotice('Log in of registreer een account om te reageren op e-mails.');
+      setShowAuthModal(true);
+      showToast('Inloggen vereist om te reageren', 'error');
+      return;
+    }
     setReplyingToEmail(email);
     setComposeCompany(email.companyId);
     setComposeRecipient(email.senderEmail || email.senderName);
@@ -1368,6 +1501,12 @@ export default function App() {
 
   const handleSendChatMessage = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLoggedIn) {
+      setAuthModalNotice('Log in of registreer een account om berichten te plaatsen in QI Chat.');
+      setShowAuthModal(true);
+      showToast('Inloggen vereist om berichten te plaatsen', 'error');
+      return;
+    }
     if (!chatInput.trim() && !selectedEmailForChatAttachment) return;
 
     const textToSend = chatInput.trim();
@@ -1430,6 +1569,12 @@ export default function App() {
   };
 
   const handleOpenPinModal = (email?: NetworkEmail) => {
+    if (!isLoggedIn) {
+      setAuthModalNotice('Log in of registreer een account om onderwerpen vast te pinnen in QI Chat.');
+      setShowAuthModal(true);
+      showToast('Inloggen vereist om onderwerpen te pinnen', 'error');
+      return;
+    }
     const targetEmail = email || activeEmail || emails[0];
     if (!targetEmail) {
       showToast('Geen e-mail beschikbaar om te pinnen.', 'error');
@@ -1572,10 +1717,6 @@ export default function App() {
     );
   }, [chats, activeChatChannel]);
 
-  if (!isLoggedIn) {
-    return <AuthPage onSuccessLogin={handleSuccessLogin} />;
-  }
-
   return (
     <div className="min-h-screen h-screen flex flex-col bg-slate-950 text-slate-100 font-sans antialiased overflow-hidden select-none">
       {toastMessage && (
@@ -1677,6 +1818,31 @@ export default function App() {
 
         {/* Right Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          {/* Eye Bedragen Toggle / Status Button */}
+          {isLoggedIn ? (
+            <button
+              onClick={handleAmountClick}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border text-xs font-semibold transition shrink-0 ${
+                showAmounts
+                  ? 'bg-emerald-500/15 hover:bg-emerald-500/25 border-emerald-500/40 text-emerald-300'
+                  : 'bg-amber-500/15 hover:bg-amber-500/25 border-amber-500/40 text-amber-300'
+              }`}
+              title={showAmounts ? 'Klik op 👁️ om bedragen te verbergen' : 'Klik op 👁️ om bedragen te tonen'}
+            >
+              <span className="text-sm">👁️</span>
+              <span className="hidden sm:inline">Bedragen: {showAmounts ? 'Zichtbaar' : 'Verborgen'}</span>
+            </button>
+          ) : (
+            <button
+              onClick={handleAmountClick}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/35 text-amber-300 text-xs font-semibold transition shrink-0"
+              title="Bedragen zijn afgeschermd. Klik om in te loggen of te registreren."
+            >
+              <span className="text-sm">👁️</span>
+              <span className="hidden sm:inline">Bedragen Verborgen</span>
+            </button>
+          )}
+
           <button
             onClick={() => setShowAddressesModal(true)}
             className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/90 text-slate-200 border border-slate-700/70 text-xs font-medium transition shrink-0"
@@ -1686,37 +1852,50 @@ export default function App() {
             <span>12 Adressen</span>
           </button>
 
-          {/* Directie / Partner Toggle (Visible from md up, accessible in menu drawer for all screens) */}
-          <div className="hidden md:flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700/60 shrink-0">
+          {isLoggedIn ? (
+            /* Directie / Partner Toggle */
+            <div className="hidden md:flex items-center bg-slate-800/90 rounded-xl p-1 border border-slate-700/60 shrink-0">
+              <button
+                onClick={() => {
+                  setIsAdminMode(true);
+                  showToast('Directiemodus actief (verzenden als beheerder)');
+                }}
+                className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
+                  isAdminMode
+                    ? 'bg-amber-500 text-slate-950 font-semibold shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <Shield className="w-3.5 h-3.5" />
+                <span>Directie</span>
+              </button>
+              <button
+                onClick={() => {
+                  setIsAdminMode(false);
+                  showToast('Partnermodus actief (ontvangstweergave)');
+                }}
+                className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
+                  !isAdminMode
+                    ? 'bg-slate-700 text-white font-semibold shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Partner</span>
+              </button>
+            </div>
+          ) : (
             <button
               onClick={() => {
-                setIsAdminMode(true);
-                showToast('Directiemodus actief (verzenden als beheerder)');
+                setAuthModalNotice('Log in of registreer een account om direct toegang te krijgen tot alle functies en bedragen.');
+                setShowAuthModal(true);
               }}
-              className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
-                isAdminMode
-                  ? 'bg-amber-500 text-slate-950 font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              <Shield className="w-3.5 h-3.5" />
-              <span>Directie</span>
-            </button>
-            <button
-              onClick={() => {
-                setIsAdminMode(false);
-                showToast('Partnermodus actief (ontvangstweergave)');
-              }}
-              className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 rounded-lg text-xs font-medium transition-all ${
-                !isAdminMode
-                  ? 'bg-slate-700 text-white font-semibold shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
-              }`}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition active:scale-95 shrink-0"
             >
               <User className="w-3.5 h-3.5" />
-              <span>Partner</span>
+              <span>Inloggen / Registreren</span>
             </button>
-          </div>
+          )}
         </div>
       </header>
 
@@ -1747,7 +1926,33 @@ export default function App() {
 
             {/* Drawer Actions */}
             <div className="p-3 border-b border-slate-800 space-y-2">
-              {isAdminMode ? (
+              {!isLoggedIn && (
+                <div className="space-y-2 mb-2 pb-2 border-b border-slate-800/80">
+                  <button
+                    onClick={() => {
+                      setIsMobileDrawerOpen(false);
+                      setAuthModalNotice('Log in of registreer een account om alle netwerkfuncties en bedragen te ontgrendelen.');
+                      setShowAuthModal(true);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md transition"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Inloggen of Registreren</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsMobileDrawerOpen(false);
+                      handleAmountClick();
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-slate-900 border border-amber-500/30 text-amber-300 font-semibold text-xs transition"
+                  >
+                    <span className="text-sm">👁️</span>
+                    <span>Bedragen Ontgrendelen</span>
+                  </button>
+                </div>
+              )}
+
+              {isAdminMode && isLoggedIn ? (
                 <button
                   onClick={() => {
                     setIsMobileDrawerOpen(false);
@@ -1761,7 +1966,7 @@ export default function App() {
               ) : (
                 <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-xs flex items-center gap-2">
                   <Lock className="w-4 h-4 text-amber-400" />
-                  <span>Ontvangstmodus actief</span>
+                  <span>{isLoggedIn ? 'Ontvangstmodus actief' : 'Gastweergave actief'}</span>
                 </div>
               )}
 
@@ -2046,14 +2251,29 @@ export default function App() {
                   <Trash2 className="w-4 h-4" />
                 </button>
 
-                <button
-                  onClick={handleLogout}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-slate-300 hover:text-rose-300 text-xs font-semibold transition"
-                  title="Uitloggen"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Uitloggen</span>
-                </button>
+                {isLoggedIn ? (
+                  <button
+                    onClick={handleLogout}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-rose-950/60 border border-slate-800 text-slate-300 hover:text-rose-300 text-xs font-semibold transition"
+                    title="Uitloggen"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Uitloggen</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsMobileDrawerOpen(false);
+                      setAuthModalNotice('Log in of registreer een account om direct toegang te krijgen tot alle functies en bedragen.');
+                      setShowAuthModal(true);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition shadow-sm"
+                    title="Inloggen of Registreren"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>Inloggen</span>
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -2710,7 +2930,12 @@ export default function App() {
                           </div>
 
                           <h2 className="text-base sm:text-xl font-bold text-white mb-4 sm:mb-6 leading-snug">
-                            {activeEmail.subject}
+                            <FormattedAmountText
+                              text={activeEmail.subject}
+                              isLoggedIn={isLoggedIn}
+                              showAmounts={showAmounts}
+                              onAmountClick={handleAmountClick}
+                            />
                           </h2>
 
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 sm:mb-6 border-b border-slate-800">
@@ -2764,7 +2989,12 @@ export default function App() {
                           )}
 
                           <div className="text-slate-300 text-xs sm:text-[15px] leading-relaxed whitespace-pre-line">
-                            {activeEmail.body}
+                            <FormattedAmountText
+                              text={activeEmail.body}
+                              isLoggedIn={isLoggedIn}
+                              showAmounts={showAmounts}
+                              onAmountClick={handleAmountClick}
+                            />
                           </div>
 
                           <div className="mt-6 pt-5 border-t border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
@@ -2877,6 +3107,9 @@ export default function App() {
                             comp={comp}
                             read={read}
                             isPinnedInChat={isPinnedInChat}
+                            isLoggedIn={isLoggedIn}
+                            showAmounts={showAmounts}
+                            onAmountClick={handleAmountClick}
                             onOpen={handleOpenEmail}
                             onToggleRead={handleToggleEmailReadStatus}
                             onArchive={handleArchiveEmail}
@@ -3143,7 +3376,12 @@ export default function App() {
                                   </p>
                                 </div>
                                 <p className="text-[11px] text-slate-400 line-clamp-1 italic">
-                                  "{pin.summary}"
+                                  "<FormattedAmountText
+                                    text={pin.summary}
+                                    isLoggedIn={isLoggedIn}
+                                    showAmounts={showAmounts}
+                                    onAmountClick={handleAmountClick}
+                                  />"
                                 </p>
                               </div>
 
@@ -3285,7 +3523,12 @@ export default function App() {
                         )}
 
                         <p className="text-xs sm:text-[13.5px] leading-relaxed whitespace-pre-wrap break-words">
-                          {msg.text}
+                          <FormattedAmountText
+                            text={msg.text}
+                            isLoggedIn={isLoggedIn}
+                            showAmounts={showAmounts}
+                            onAmountClick={handleAmountClick}
+                          />
                         </p>
 
                         <div className="flex items-center justify-end gap-1 mt-1">
@@ -4410,7 +4653,7 @@ export default function App() {
                             {mail.subject}
                           </h4>
                           <p className="text-[11px] text-slate-400 truncate mt-0.5">
-                            {mail.senderName}: {mail.body?.replace(/\n/g, ' ')}
+                            {mail.senderName}: {maskAmountString(mail.body?.replace(/\n/g, ' '), isLoggedIn, showAmounts)}
                           </p>
                         </div>
                       </div>
@@ -4437,6 +4680,16 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Auth Modal (Inloggen of Registreren) */}
+      {showAuthModal && (
+        <AuthPage
+          isModal
+          bannerNotice={authModalNotice}
+          onSuccessLogin={handleSuccessLogin}
+          onClose={() => setShowAuthModal(false)}
+        />
       )}
     </div>
   );
