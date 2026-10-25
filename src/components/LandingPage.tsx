@@ -8,6 +8,7 @@ import {
 import { Company } from '../types.ts';
 import { COMPANIES } from '../constants.ts';
 import { QuantumLogo } from './QuantumLogo.tsx';
+import { CompanyLogo } from './CompanyLogo.tsx';
 
 interface LandingPageProps {
   onEnterApp: () => void;
@@ -384,7 +385,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/25 cursor-pointer transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 group"
                     >
                       <div className="flex items-start gap-3.5 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#2997ff] mt-1.5 shrink-0" />
+                        <CompanyLogo companyId="quantum_initium" size={42} className="mt-0.5 shrink-0" />
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#2997ff]/15 text-[#2997ff] border border-[#2997ff]/30">
@@ -441,7 +442,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/25 cursor-pointer transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 group"
                     >
                       <div className="flex items-start gap-3.5 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#2997ff] mt-1.5 shrink-0" />
+                        <CompanyLogo companyId="woningvry" size={42} className="mt-0.5 shrink-0" />
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#30d158]/15 text-[#30d158] border border-[#30d158]/30">
@@ -498,7 +499,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/25 cursor-pointer transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 group"
                     >
                       <div className="flex items-start gap-3.5 min-w-0">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#2997ff] mt-1.5 shrink-0" />
+                        <CompanyLogo companyId="vvc" size={42} className="mt-0.5 shrink-0" />
                         <div className="min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#bf5af2]/15 text-[#bf5af2] border border-[#bf5af2]/30">
@@ -615,16 +616,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               >
                 <div>
                   <div className="flex items-center justify-between gap-3 mb-4">
-                    {/* Squircle Monogram with Apple Glow */}
-                    <div
-                      className="w-11 h-11 rounded-2xl flex items-center justify-center text-white font-bold text-xs shadow-lg transition-transform group-hover:scale-105 shrink-0 border border-white/10"
-                      style={{
-                        backgroundColor: comp.color,
-                        boxShadow: `0 8px 24px -4px ${comp.color}45`
-                      }}
-                    >
-                      {comp.short}
-                    </div>
+                    {/* Authentic Company Logo with Apple Glow */}
+                    <CompanyLogo companyId={comp.id} size={46} />
 
                     <span className="text-[11px] font-mono text-[#86868b] px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.1] truncate max-w-[150px]">
                       @{comp.domain}

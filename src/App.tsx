@@ -44,6 +44,7 @@ import {
   syncContactWithCrmos
 } from './services/crmosService.ts';
 import { QuantumLogo } from './components/QuantumLogo.tsx';
+import { CompanyLogo } from './components/CompanyLogo.tsx';
 import { AuthPage } from './components/AuthPage.tsx';
 import { LandingPage } from './components/LandingPage.tsx';
 import { ApiCrmHubModal } from './components/ApiCrmHubModal.tsx';
@@ -3190,12 +3191,7 @@ export default function App() {
 
                           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 mb-4 sm:mb-6 border-b border-slate-800">
                             <div className="flex items-center gap-3">
-                              <div
-                                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-md"
-                                style={{ backgroundColor: comp.color }}
-                              >
-                                {comp.short}
-                              </div>
+                              <CompanyLogo companyId={activeEmail.companyId} size={44} className="shrink-0" />
                               <div>
                                 <div className="flex items-center gap-2 flex-wrap">
                                   <span className="font-semibold text-xs sm:text-sm text-slate-200">
@@ -4371,10 +4367,7 @@ export default function App() {
                       className="p-3 rounded-xl border border-slate-800 bg-slate-950 flex items-center justify-between gap-2 hover:border-slate-700 transition"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <span
-                          className="w-2.5 h-2.5 rounded-full shrink-0"
-                          style={{ backgroundColor: c.color }}
-                        />
+                        <CompanyLogo companyId={c.id} size={36} className="shrink-0" />
                         <div className="min-w-0">
                           <p className="text-xs font-bold text-white truncate">{c.name}</p>
                           <p className="text-[11px] font-mono text-slate-400 truncate">{fullEmail}</p>
