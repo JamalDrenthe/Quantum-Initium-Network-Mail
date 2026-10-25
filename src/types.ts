@@ -9,6 +9,18 @@ export interface Company {
   tagline: string;
 }
 
+export type EmailCategory =
+  | 'Financieel & Investeringen'
+  | 'CRMos Lead & Aanmelding'
+  | 'Juridisch & Compliance'
+  | 'Vastgoed & Dossier'
+  | 'Directie & Bestuur'
+  | 'HR & Payroll'
+  | 'Marketing & Groei'
+  | 'Technisch & API'
+  | 'Events & Hospitality'
+  | 'Algemeen';
+
 export interface NetworkEmail {
   id: string;
   companyId: string;
@@ -17,6 +29,10 @@ export interface NetworkEmail {
   senderEmail: string;
   recipientScope: string;
   priority: 'Normaal' | 'Hoog';
+  category?: EmailCategory;
+  tags?: string[];
+  crmContactId?: string;
+  forwardedViaApi?: boolean;
   starred?: boolean;
   archived?: boolean;
   readBy: string[];
@@ -42,6 +58,23 @@ export interface NetworkChat {
   status?: string;
 }
 
+export interface CrmContact {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  companyId: string;
+  companyName?: string;
+  role: string;
+  status: 'Lead' | 'Actieve Partner' | 'Directie' | 'Klant' | 'VIP Lid';
+  tags: string[];
+  hasMailQuantumInitiumTag: boolean;
+  dealValue?: string;
+  notes?: string;
+  source?: string;
+  lastSyncedAt: number;
+}
+
 export interface NetworkUser {
   uid: string;
   name: string;
@@ -49,6 +82,12 @@ export interface NetworkUser {
   role: string;
   lastSeen: number;
   email?: string;
+  companyId?: string;
+  tags?: string[];
+  crmContactId?: string;
+  crmSynced?: boolean;
+  phone?: string;
+  crmStatus?: string;
 }
 
 export interface PinnedTopic {
@@ -61,4 +100,15 @@ export interface PinnedTopic {
   pinnedBy: string;
   timestamp: number;
 }
+
+export interface CategorizationResult {
+  companyId: string;
+  companyName: string;
+  category: EmailCategory;
+  priority: 'Normaal' | 'Hoog';
+  tags: string[];
+  matchedKeywords: string[];
+  confidence: number;
+}
+
 

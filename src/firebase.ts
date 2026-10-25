@@ -74,6 +74,20 @@ export const auth = getAuth(app);
 const databaseId = import.meta.env.VITE_FIREBASE_DATABASE_ID;
 export const db: Firestore = databaseId ? getFirestore(app, databaseId) : getFirestore(app);
 
+// CRMos (crmosone-dev) Secondary Firebase Connection for Direct CRM Sync
+const crmosFirebaseConfig = {
+  projectId: import.meta.env.VITE_CRMOS_PROJECT_ID || 'crmosone-dev',
+  appId: import.meta.env.VITE_CRMOS_APP_ID || '1:560657459503:web:cafda0014c240cdc7099da',
+  apiKey: import.meta.env.VITE_CRMOS_API_KEY || 'AIzaSyCsBPKp7i7Cd959bF8hZzTDtV_V_7cI9Xo',
+  authDomain: import.meta.env.VITE_CRMOS_AUTH_DOMAIN || 'crmosone-dev.firebaseapp.com',
+  storageBucket: import.meta.env.VITE_CRMOS_STORAGE_BUCKET || 'crmosone-dev.firebasestorage.app',
+  messagingSenderId: import.meta.env.VITE_CRMOS_MESSAGING_SENDER_ID || '560657459503',
+};
+
+const existingCrmosApp = getApps().find((a) => a.name === 'crmos');
+const crmosApp = existingCrmosApp || initializeApp(crmosFirebaseConfig, 'crmos');
+export const crmosDb: Firestore = getFirestore(crmosApp);
+
 export async function verifyFirestoreConnection(): Promise<boolean> {
   try {
     await getDocFromServer(doc(db, 'users', 'connection_health_check'));

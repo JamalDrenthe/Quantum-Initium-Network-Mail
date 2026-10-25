@@ -11,9 +11,14 @@ import {
   GoogleAuthProvider,
   updateProfile
 } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase.ts';
+import { auth } from '../firebase.ts';
 import { COMPANIES } from '../constants.ts';
+import { CrmContact } from '../types.ts';
+import {
+  lookupCrmContactByEmail,
+  syncContactWithCrmos,
+  MAIL_QI_TAG
+} from '../services/crmosService.ts';
 import { QuantumLogo } from './QuantumLogo.tsx';
 
 export interface AuthPageProps {
@@ -24,6 +29,8 @@ export interface AuthPageProps {
     email: string;
     role: string;
     companyId: string;
+    tags?: string[];
+    crmContactId?: string;
   }) => void;
   onClose?: () => void;
   isModal?: boolean;
@@ -54,8 +61,61 @@ export function AuthPage({
   const [showRegPassword, setShowRegPassword] = useState(false);
 
   const [loading, setLoading] = useState(false);
+  const [isFetchingCrm, setIsFetchingCrm] = useState(false);
+  const [crmContactMatch, setCrmContactMatch] = useState<CrmContact | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const handleFetchCrmData = async (targetEmail: string, silent = false) => {
+    const clean = targetEmail.trim().toLowerCase();
+    if (!clean || !clean.includes('@')) {
+      if (!silent) {
+        setErrorMessage('Vul eerst een zakelijk e-mailadres in om gegevens uit CRMos op te halen.');
+      }
+      return null;
+    }
+
+    setIsFetchingCrm(true);
+    if (!silent) {
+      setErrorMessage(null);
+    }
+
+    try {
+      const contact = await lookupCrmContactByEmail(clean);
+      if (contact) {
+        setCrmContactMatch(contact);
+        if (contact.name && !regName.trim()) {
+          setRegName(contact.name);
+        } else if (contact.name && !silent) {
+          setRegName(contact.name);
+        }
+        if (contact.companyId) {
+          setRegCompany(contact.companyId);
+        }
+        if (contact.role) {
+          setRegRole(contact.role === 'Partner' ? 'Partner' : 'Directie');
+        }
+        if (!silent) {
+          setSuccessMessage(
+            `CRMos profiel gevonden voor ${contact.name} (${contact.companyName}). Tag '${MAIL_QI_TAG}' is gekoppeld.`
+          );
+        }
+        return contact;
+      } else {
+        setCrmContactMatch(null);
+        if (!silent) {
+          setSuccessMessage(
+            `Nieuw contactpersoon voor CRMos. Bij registratie wordt direct een CRMos-profiel met tag '${MAIL_QI_TAG}' aangemaakt.`
+          );
+        }
+        return null;
+      }
+    } catch {
+      return null;
+    } finally {
+      setIsFetchingCrm(false);
+    }
+  };
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,38 +135,39 @@ export function AuthPage({
     setLoading(true);
 
     try {
+      const crmMatch = await lookupCrmContactByEmail(cleanEmail);
       const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, loginPassword);
       const user = userCredential.user;
       const cleanHandle = cleanEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9._]/g, '') || 'partner';
-      
+
+      const resolvedName = crmMatch?.name || user.displayName || 'Netwerk Partner';
+      const resolvedRole = (crmMatch?.role || 'Directie') as 'Directie' | 'Partner';
+      const resolvedCompanyId = crmMatch?.companyId || 'quantum_initium';
+
+      const syncedCrm = await syncContactWithCrmos({
+        uid: user.uid,
+        name: resolvedName,
+        email: user.email || cleanEmail,
+        companyId: resolvedCompanyId,
+        role: resolvedRole
+      });
+
       const loggedUserData = {
         uid: user.uid,
-        name: user.displayName || 'Netwerk Partner',
+        name: syncedCrm.name || resolvedName,
         handle: cleanHandle,
         email: user.email || cleanEmail,
-        role: 'Directie',
-        companyId: 'quantum_initium'
+        role: syncedCrm.role || resolvedRole,
+        companyId: syncedCrm.companyId || resolvedCompanyId,
+        tags: syncedCrm.tags,
+        crmContactId: syncedCrm.id
       };
-
-      await setDoc(
-        doc(db, 'users', user.uid),
-        {
-          uid: user.uid,
-          name: loggedUserData.name,
-          handle: loggedUserData.handle,
-          email: loggedUserData.email,
-          role: loggedUserData.role,
-          companyId: loggedUserData.companyId,
-          lastSeen: Date.now()
-        },
-        { merge: true }
-      ).catch(() => {});
 
       if (rememberMe) {
         localStorage.setItem('qin_remember_user', JSON.stringify(loggedUserData));
       }
 
-      setSuccessMessage('Succesvol ingelogd bij Quantum Initium Network.');
+      setSuccessMessage(`Succesvol ingelogd & gesynchroniseerd met CRMos (${MAIL_QI_TAG}).`);
       setTimeout(() => {
         onSuccessLogin(loggedUserData);
       }, 500);
@@ -120,34 +181,27 @@ export function AuthPage({
         setErrorMessage('Het opgegeven wachtwoord is onjuist.');
       } else if (errCode === 'auth/invalid-email') {
         setErrorMessage('Het formaat van het emailadres is niet geldig.');
-      } else if (errCode === 'auth/operation-not-allowed') {
+      } else {
         const cleanHandle = cleanEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9._]/g, '') || 'partner';
+        const crmMatch = await lookupCrmContactByEmail(cleanEmail);
+        const fallbackUid = `usr_${Math.random().toString(36).slice(2, 9)}`;
+        const syncedCrm = await syncContactWithCrmos({
+          uid: fallbackUid,
+          name: crmMatch?.name || cleanHandle.toUpperCase(),
+          email: cleanEmail,
+          companyId: crmMatch?.companyId || 'quantum_initium',
+          role: crmMatch?.role || 'Directie'
+        });
+
         const fallbackData = {
-          uid: `usr_${Math.random().toString(36).slice(2, 9)}`,
-          name: cleanHandle.toUpperCase(),
+          uid: fallbackUid,
+          name: syncedCrm.name,
           handle: cleanHandle,
           email: cleanEmail,
-          role: 'Directie',
-          companyId: 'quantum_initium'
-        };
-        await setDoc(
-          doc(db, 'users', fallbackData.uid),
-          {
-            ...fallbackData,
-            lastSeen: Date.now()
-          },
-          { merge: true }
-        ).catch(() => {});
-        onSuccessLogin(fallbackData);
-      } else {
-        const fallbackHandle = cleanEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9._]/g, '') || 'partner';
-        const fallbackData = {
-          uid: `usr_${Math.random().toString(36).slice(2, 9)}`,
-          name: fallbackHandle.toUpperCase(),
-          handle: fallbackHandle,
-          email: cleanEmail,
-          role: 'Directie',
-          companyId: 'quantum_initium'
+          role: syncedCrm.role,
+          companyId: syncedCrm.companyId,
+          tags: syncedCrm.tags,
+          crmContactId: syncedCrm.id
         };
         onSuccessLogin(fallbackData);
       }
@@ -191,31 +245,26 @@ export function AuthPage({
 
       const cleanHandle = cleanEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9._]/g, '') || 'partner';
 
+      const syncedCrm = await syncContactWithCrmos({
+        uid: user.uid,
+        name: cleanName,
+        email: cleanEmail,
+        companyId: regCompany,
+        role: regRole
+      });
+
       const newUserData = {
         uid: user.uid,
         name: cleanName,
         handle: cleanHandle,
         email: cleanEmail,
         role: regRole,
-        companyId: regCompany
+        companyId: regCompany,
+        tags: syncedCrm.tags,
+        crmContactId: syncedCrm.id
       };
 
-      await setDoc(
-        doc(db, 'users', user.uid),
-        {
-          uid: user.uid,
-          name: cleanName,
-          handle: cleanHandle,
-          email: cleanEmail,
-          role: regRole,
-          companyId: regCompany,
-          createdAt: new Date().toISOString(),
-          lastSeen: Date.now()
-        },
-        { merge: true }
-      );
-
-      setSuccessMessage('Account succesvol geregistreerd. Welkom bij het netwerk!');
+      setSuccessMessage(`Account & CRMos contact aangemaakt met tag '${MAIL_QI_TAG}'.`);
       setTimeout(() => {
         onSuccessLogin(newUserData);
       }, 600);
@@ -231,24 +280,26 @@ export function AuthPage({
         setErrorMessage('Kies alsjeblieft een sterker wachtwoord van minstens 6 tekens.');
       } else {
         const cleanHandle = cleanEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9._]/g, '') || 'partner';
+        const fallbackUid = `usr_${Math.random().toString(36).slice(2, 9)}`;
+        const syncedCrm = await syncContactWithCrmos({
+          uid: fallbackUid,
+          name: cleanName,
+          email: cleanEmail,
+          companyId: regCompany,
+          role: regRole
+        });
+
         const fallbackData = {
-          uid: `usr_${Math.random().toString(36).slice(2, 9)}`,
+          uid: fallbackUid,
           name: cleanName,
           handle: cleanHandle,
           email: cleanEmail,
           role: regRole,
-          companyId: regCompany
+          companyId: regCompany,
+          tags: syncedCrm.tags,
+          crmContactId: syncedCrm.id
         };
-        await setDoc(
-          doc(db, 'users', fallbackData.uid),
-          {
-            ...fallbackData,
-            createdAt: new Date().toISOString(),
-            lastSeen: Date.now()
-          },
-          { merge: true }
-        ).catch(() => {});
-        setSuccessMessage('Account geregistreerd en profiel aangemaakt.');
+        setSuccessMessage(`Account geregistreerd & CRMos getagd met '${MAIL_QI_TAG}'.`);
         setTimeout(() => {
           onSuccessLogin(fallbackData);
         }, 600);
@@ -267,30 +318,26 @@ export function AuthPage({
       const user = result.user;
       const cleanHandle = (user.email || 'partner').split('@')[0].toLowerCase().replace(/[^a-z0-9._]/g, '');
 
-      const userData = {
+      const syncedCrm = await syncContactWithCrmos({
         uid: user.uid,
         name: user.displayName || 'Google Netwerk Relatie',
+        email: user.email || `${cleanHandle}@quantuminitium.com`,
+        companyId: 'quantum_initium',
+        role: 'Directie'
+      });
+
+      const userData = {
+        uid: user.uid,
+        name: syncedCrm.name || user.displayName || 'Google Netwerk Relatie',
         handle: cleanHandle,
         email: user.email || '',
-        role: 'Directie',
-        companyId: 'quantum_initium'
+        role: syncedCrm.role || 'Directie',
+        companyId: syncedCrm.companyId || 'quantum_initium',
+        tags: syncedCrm.tags,
+        crmContactId: syncedCrm.id
       };
 
-      await setDoc(
-        doc(db, 'users', user.uid),
-        {
-          uid: user.uid,
-          name: userData.name,
-          handle: userData.handle,
-          email: userData.email,
-          role: userData.role,
-          companyId: userData.companyId,
-          lastSeen: Date.now()
-        },
-        { merge: true }
-      ).catch(() => {});
-
-      setSuccessMessage('Succesvol verbonden met Google Workspace account.');
+      setSuccessMessage(`Verbonden met Google & CRMos (${MAIL_QI_TAG}).`);
       setTimeout(() => {
         onSuccessLogin(userData);
       }, 500);
@@ -302,28 +349,33 @@ export function AuthPage({
     }
   };
 
-  const handleQuickDemoAccess = (role: 'Directie' | 'Partner', companyId: string) => {
+  const handleQuickDemoAccess = async (role: 'Directie' | 'Partner', companyId: string) => {
     const randomSuffix = Math.random().toString(36).slice(2, 6);
     const chosenCompany = COMPANIES.find(c => c.id === companyId) || COMPANIES[0];
+    const demoUid = `demo_${role.toLowerCase()}_${randomSuffix}`;
+    const demoName = role === 'Directie' ? 'Jamal Drenthe' : `Partner ${chosenCompany.short}`;
+    const demoEmail = role === 'Directie' ? 'info@jamaldrenthe.com' : `${role.toLowerCase()}@${chosenCompany.domain}`;
+
+    const syncedCrm = await syncContactWithCrmos({
+      uid: demoUid,
+      name: demoName,
+      email: demoEmail,
+      companyId,
+      role
+    });
+
     const demoData = {
-      uid: `demo_${role.toLowerCase()}_${randomSuffix}`,
-      name: role === 'Directie' ? `Directielid ${randomSuffix.toUpperCase()}` : `Partner ${chosenCompany.short}`,
+      uid: demoUid,
+      name: syncedCrm.name || demoName,
       handle: `${role.toLowerCase()}.${randomSuffix}`,
-      email: `${role.toLowerCase()}@${chosenCompany.domain}`,
+      email: demoEmail,
       role: role,
-      companyId: companyId
+      companyId: companyId,
+      tags: syncedCrm.tags,
+      crmContactId: syncedCrm.id
     };
 
-    setDoc(
-      doc(db, 'users', demoData.uid),
-      {
-        ...demoData,
-        lastSeen: Date.now()
-      },
-      { merge: true }
-    ).catch(() => {});
-
-    setSuccessMessage(`Toegang verleend als ${role} van ${chosenCompany.name}.`);
+    setSuccessMessage(`Toegang verleend & CRMos contact getagd met '${MAIL_QI_TAG}'.`);
     setTimeout(() => {
       onSuccessLogin(demoData);
     }, 400);
@@ -375,7 +427,7 @@ export function AuthPage({
           }}
           className={`py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
             authMode === 'login'
-              ? 'apple-btn-gold text-slate-950 shadow-md'
+              ? 'apple-btn-primary text-white shadow-md'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -390,12 +442,25 @@ export function AuthPage({
           }}
           className={`py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
             authMode === 'register'
-              ? 'apple-btn-gold text-slate-950 shadow-md'
+              ? 'apple-btn-primary text-white shadow-md'
               : 'text-slate-400 hover:text-white'
           }`}
         >
           Registreren
         </button>
+      </div>
+
+      {/* CRMos Integratie & Tag Badge */}
+      <div className="mb-5 p-3 rounded-2xl bg-[#0071e3]/10 border border-[#2997ff]/25 flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="w-2 h-2 rounded-full bg-[#30d158] shrink-0" />
+          <span className="text-[#f5f5f7] font-medium truncate">
+            CRMos Koppeling Actief
+          </span>
+        </div>
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/[0.08] border border-white/15 text-[11px] font-mono text-[#2997ff]">
+          #{MAIL_QI_TAG}
+        </span>
       </div>
 
             {/* Feedback Notifications */}
@@ -413,13 +478,40 @@ export function AuthPage({
               </div>
             )}
 
+            {crmContactMatch && (
+              <div className="mb-5 p-3.5 rounded-2xl bg-white/[0.05] border border-[#30d158]/35 text-xs flex flex-col gap-1.5">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-semibold text-[#30d158] flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5" />
+                    CRMos Contactpersoon Herkend
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#0071e3]/20 text-[#2997ff] border border-[#2997ff]/30 font-mono text-[10px]">
+                    {MAIL_QI_TAG}
+                  </span>
+                </div>
+                <p className="text-[#f5f5f7] font-medium">
+                  {crmContactMatch.name} • <span className="text-[#86868b]">{crmContactMatch.companyName} ({crmContactMatch.role})</span>
+                </p>
+              </div>
+            )}
+
             {/* Inlog Form */}
             {authMode === 'login' && (
               <form onSubmit={handleLoginSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Zakelijk Emailadres
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-semibold text-slate-300">
+                      Zakelijk Emailadres
+                    </label>
+                    <button
+                      type="button"
+                      disabled={isFetchingCrm}
+                      onClick={() => handleFetchCrmData(loginEmail)}
+                      className="text-[11px] text-[#2997ff] hover:underline font-medium"
+                    >
+                      {isFetchingCrm ? 'CRMos zoeken...' : 'CRMos Data Checken'}
+                    </button>
+                  </div>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
@@ -427,7 +519,12 @@ export function AuthPage({
                       required
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
-                      placeholder="bijvoorbeeld directie@quantuminitium.qin"
+                      onBlur={() => {
+                        if (loginEmail.includes('@')) {
+                          handleFetchCrmData(loginEmail, true);
+                        }
+                      }}
+                      placeholder="bijvoorbeeld info@jamaldrenthe.com"
                       className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
                     />
                   </div>
@@ -482,10 +579,10 @@ export function AuthPage({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-3.5 rounded-full apple-btn-gold text-slate-950 font-semibold text-xs sm:text-sm shadow-lg transition active:scale-98 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-full apple-btn-primary text-white font-semibold text-xs sm:text-sm shadow-lg transition active:scale-98 flex items-center justify-center gap-2"
                 >
                   {loading ? (
-                    <span>Aanmelden verwerken...</span>
+                    <span>Aanmelden & CRMos synchroniseren...</span>
                   ) : (
                     <>
                       <span>Veilig Inloggen</span>
@@ -500,8 +597,40 @@ export function AuthPage({
             {authMode === 'register' && (
               <form onSubmit={handleRegisterSubmit} className="space-y-3.5">
                 <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-semibold text-slate-300">
+                      Zakelijk Emailadres
+                    </label>
+                    <button
+                      type="button"
+                      disabled={isFetchingCrm}
+                      onClick={() => handleFetchCrmData(regEmail)}
+                      className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#0071e3]/20 hover:bg-[#0071e3]/30 text-[#2997ff] border border-[#2997ff]/30 text-[11px] font-semibold transition"
+                    >
+                      <span>{isFetchingCrm ? 'CRMos laden...' : 'CRMos Data Ophalen'}</span>
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                    <input
+                      type="email"
+                      required
+                      value={regEmail}
+                      onChange={(e) => setRegEmail(e.target.value)}
+                      onBlur={() => {
+                        if (regEmail.includes('@')) {
+                          handleFetchCrmData(regEmail, true);
+                        }
+                      }}
+                      placeholder="naam@onderneming.qin (of bekend CRMos e-mailadres)"
+                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
+                    />
+                  </div>
+                </div>
+
+                <div>
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Volledige Naam
+                    Volledige Naam (Contactpersoon)
                   </label>
                   <div className="relative">
                     <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -555,23 +684,6 @@ export function AuthPage({
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    Zakelijk Emailadres
-                  </label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      required
-                      value={regEmail}
-                      onChange={(e) => setRegEmail(e.target.value)}
-                      placeholder="naam@onderneming.qin"
-                      className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
-                    />
-                  </div>
-                </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-slate-300 mb-1.5">
@@ -619,13 +731,13 @@ export function AuthPage({
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3.5 rounded-full apple-btn-gold text-slate-950 font-semibold text-xs sm:text-sm shadow-lg transition active:scale-98 flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-full apple-btn-primary text-white font-semibold text-xs sm:text-sm shadow-lg transition active:scale-98 flex items-center justify-center gap-2"
                   >
                     {loading ? (
-                      <span>Account aanmaken...</span>
+                      <span>Account & CRMos tag aanmaken...</span>
                     ) : (
                       <>
-                        <span>Account Registreren</span>
+                        <span>Account Registreren + CRMos Tag</span>
                         <CheckCircle2 className="w-4 h-4" />
                       </>
                     )}

@@ -28,7 +28,7 @@ import {
   setDoc
 } from 'firebase/firestore';
 
-import { Company, NetworkEmail, NetworkChat, NetworkUser, PinnedTopic } from './types.ts';
+import { Company, CrmContact, NetworkEmail, NetworkChat, NetworkUser, PinnedTopic } from './types.ts';
 import {
   COMPANIES,
   INITIAL_EMAILS_SEED,
@@ -36,9 +36,17 @@ import {
   SAMPLE_BUSINESS_EMAILS,
   INITIAL_PINNED_TOPICS_SEED
 } from './constants.ts';
+import {
+  MAIL_QI_TAG,
+  INITIAL_CRM_CONTACTS_SEED,
+  categorizeMessage,
+  ensureQuantumMailTags,
+  syncContactWithCrmos
+} from './services/crmosService.ts';
 import { QuantumLogo } from './components/QuantumLogo.tsx';
 import { AuthPage } from './components/AuthPage.tsx';
 import { LandingPage } from './components/LandingPage.tsx';
+import { ApiCrmHubModal } from './components/ApiCrmHubModal.tsx';
 
 const DRAFT_STORAGE_KEY = 'qin_compose_draft';
 
@@ -93,10 +101,20 @@ const formatFullDateTime = (ts?: number): string => {
 const ALL_START_EMAILS: NetworkEmail[] = [
   ...INITIAL_EMAILS_SEED,
   ...SAMPLE_BUSINESS_EMAILS
-].map((item, index) => ({
-  ...item,
-  id: `start_${index}`
-}));
+].map((item, index) => {
+  const cat = categorizeMessage({
+    companyId: item.companyId,
+    from: item.senderEmail,
+    subject: item.subject,
+    body: item.body
+  });
+  return {
+    ...item,
+    id: `start_${index}`,
+    category: item.category || cat.category,
+    tags: ensureQuantumMailTags(item.tags || cat.tags)
+  };
+});
 
 const ALL_START_CHATS: NetworkChat[] = INITIAL_CHATS_SEED.map((item, index) => ({
   ...item,
@@ -479,6 +497,11 @@ const SwipableEmailCard: React.FC<SwipableEmailCardProps> = ({
           </div>
 
           <div className="flex-1 min-w-0 flex items-center gap-1.5">
+            {email.category && (
+              <span className="hidden lg:inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-[#0071e3]/15 text-[#2997ff] border border-[#2997ff]/30 shrink-0">
+                {email.category}
+              </span>
+            )}
             {email.priority === 'Hoog' && (
               <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40 shrink-0">
                 Prioriteit
@@ -663,6 +686,15 @@ export default function App() {
 
   const [showAddressesModal, setShowAddressesModal] = useState<boolean>(false);
   const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
+  const [showApiCrmModal, setShowApiCrmModal] = useState<boolean>(false);
+  const [userTags, setUserTags] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('qin_user_tags');
+      if (saved) return ensureQuantumMailTags(JSON.parse(saved));
+    } catch {}
+    return ensureQuantumMailTags([MAIL_QI_TAG]);
+  });
+  const [crmContacts, setCrmContacts] = useState<CrmContact[]>(INITIAL_CRM_CONTACTS_SEED);
   const [toastMessage, setToastMessage] = useState<{ msg: string; type: 'success' | 'error' } | null>(null);
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
 
@@ -718,11 +750,15 @@ export default function App() {
     email: string;
     role: string;
     companyId: string;
+    tags?: string[];
+    crmContactId?: string;
   }) => {
+    const mergedTags = ensureQuantumMailTags(userData.tags || [MAIL_QI_TAG]);
     setUserUid(userData.uid);
     setUserName(userData.name);
     setUserHandle(userData.handle);
     setUserEmail(userData.email);
+    setUserTags(mergedTags);
     setIsAdminMode(userData.role === 'Directie');
     if (userData.companyId) {
       setSelectedCompanyFilter(userData.companyId);
@@ -739,10 +775,36 @@ export default function App() {
       localStorage.setItem('qin_user_email', userData.email);
       localStorage.setItem('qin_user_role', userData.role);
       localStorage.setItem('qin_user_company', userData.companyId || 'quantum_initium');
+      localStorage.setItem('qin_user_tags', JSON.stringify(mergedTags));
     } catch {}
+
+    syncContactWithCrmos({
+      uid: userData.uid,
+      name: userData.name,
+      email: userData.email,
+      companyId: userData.companyId || 'quantum_initium',
+      role: (userData.role === 'Partner' ? 'Partner' : 'Directie')
+    })
+      .then((syncedContact) => {
+        setCrmContacts((prev) => {
+          const exists = prev.some(
+            (c) => c.email.toLowerCase() === syncedContact.email.toLowerCase()
+          );
+          if (exists) {
+            return prev.map((c) =>
+              c.email.toLowerCase() === syncedContact.email.toLowerCase() ? syncedContact : c
+            );
+          }
+          return [syncedContact, ...prev];
+        });
+      })
+      .catch(() => {});
+
     setShowProfileModal(false);
     setIsMobileDrawerOpen(false);
-    showToast(`Welkom ${userData.name}! Bedragen zijn nu zichtbaar (👁️).`);
+    showToast(
+      `Welkom ${userData.name}! Account & CRMos gekoppeld met #${MAIL_QI_TAG} en bedragen zichtbaar (👁️).`
+    );
   };
 
   const handleLogout = async () => {
@@ -786,7 +848,10 @@ export default function App() {
         uid: userUid,
         name: userName,
         handle: userHandle,
+        email: userEmail,
         role: isAdminMode ? 'Directie' : 'Partner',
+        tags: ensureQuantumMailTags(userTags),
+        crmSynced: true,
         lastSeen: Date.now()
       },
       { merge: true }
@@ -798,10 +863,21 @@ export default function App() {
     const unsubEmails = onSnapshot(
       emailsColRef,
       (snapshot) => {
-        const fetched = snapshot.docs.map((d) => ({
-          id: d.id,
-          ...d.data()
-        })) as NetworkEmail[];
+        const fetched = snapshot.docs.map((d) => {
+          const raw = d.data() as Omit<NetworkEmail, 'id'>;
+          const cat = categorizeMessage({
+            companyId: raw.companyId,
+            from: raw.senderEmail,
+            subject: raw.subject,
+            body: raw.body
+          });
+          return {
+            id: d.id,
+            ...raw,
+            category: raw.category || cat.category,
+            tags: ensureQuantumMailTags(raw.tags || cat.tags)
+          };
+        }) as NetworkEmail[];
 
         if (fetched.length > 0) {
           fetched.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
@@ -813,6 +889,31 @@ export default function App() {
         console.warn('Firestore emails listener melding:', err);
         setIsLoadingData(false);
       }
+    );
+
+    const crmColRef = collection(db, 'crm_contacts');
+    const unsubCrm = onSnapshot(
+      crmColRef,
+      (snapshot) => {
+        const fetched = snapshot.docs.map((d) => ({
+          id: d.id,
+          ...d.data()
+        })) as CrmContact[];
+        if (fetched.length > 0) {
+          const byEmail = new Map<string, CrmContact>();
+          INITIAL_CRM_CONTACTS_SEED.forEach((seed) => byEmail.set(seed.email.toLowerCase(), seed));
+          fetched.forEach((item) => {
+            if (item.email) {
+              byEmail.set(item.email.toLowerCase(), {
+                ...item,
+                tags: ensureQuantumMailTags(item.tags || [MAIL_QI_TAG])
+              });
+            }
+          });
+          setCrmContacts(Array.from(byEmail.values()));
+        }
+      },
+      () => {}
     );
 
     const chatsColRef = collection(db, 'chats');
@@ -886,6 +987,7 @@ export default function App() {
 
     return () => {
       unsubEmails();
+      unsubCrm();
       unsubChats();
       unsubUsers();
       unsubPins();
@@ -1940,6 +2042,16 @@ export default function App() {
           </button>
 
           <button
+            onClick={() => setShowApiCrmModal(true)}
+            className="apple-btn-secondary flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[#2997ff] text-xs font-semibold transition shrink-0"
+            title="Open API Doorstuur & CRMos Integratie Hub (mail.quantuminitium tag)"
+          >
+            <Layers className="w-3.5 h-3.5 text-[#2997ff] shrink-0" />
+            <span className="hidden sm:inline">API & CRMos</span>
+            <span className="sm:hidden">CRMos</span>
+          </button>
+
+          <button
             onClick={() => setShowAddressesModal(true)}
             className="apple-btn-secondary hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[#f5f5f7] text-xs font-medium transition shrink-0"
             title="Bekijk de 12 gekoppelde adressen"
@@ -2094,6 +2206,22 @@ export default function App() {
               >
                 <FileText className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>{isGeneratingSamples ? 'Bezig met inladen...' : 'Demoberichten Inladen'}</span>
+              </button>
+
+              {/* API & CRMos Hub Button in Mobile Drawer */}
+              <button
+                onClick={() => {
+                  setIsMobileDrawerOpen(false);
+                  setShowApiCrmModal(true);
+                }}
+                className="w-full flex items-center justify-between px-3 py-2 rounded-xl bg-[#0071e3]/15 hover:bg-[#0071e3]/25 border border-[#2997ff]/30 text-xs text-[#2997ff] font-semibold transition"
+                title="Open API Doorstuur & CRMos Hub"
+              >
+                <div className="flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-[#2997ff] shrink-0" />
+                  <span>API & CRMos Hub (#{MAIL_QI_TAG})</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-[#2997ff]" />
               </button>
 
               {/* Instellingen Button */}
@@ -3011,6 +3139,16 @@ export default function App() {
                                 Introductiebericht
                               </span>
                             )}
+
+                            {activeEmail.category && (
+                              <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-[#0071e3]/15 text-[#2997ff] border border-[#2997ff]/30">
+                                {activeEmail.category}
+                              </span>
+                            )}
+
+                            <span className="px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-white/[0.06] text-[#30d158] border border-[#30d158]/30">
+                              #{MAIL_QI_TAG}
+                            </span>
 
                             {activeEmail.priority === 'Hoog' && (
                               <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/40">
@@ -4358,6 +4496,19 @@ export default function App() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between pt-1 border-t border-slate-900">
+                  <span className="font-medium text-slate-400">CRMos & Account Tags:</span>
+                  <div className="flex flex-wrap gap-1 justify-end">
+                    {ensureQuantumMailTags(userTags).map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-0.5 rounded-full bg-[#0071e3]/20 text-[#2997ff] border border-[#2997ff]/35 font-mono text-[10px] font-semibold"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between pt-1 border-t border-slate-900">
                   <span className="font-medium text-slate-400">Gebruikers ID:</span>
                   <span className="font-mono text-[10px] text-amber-300 select-all">
                     {userUid}
@@ -4793,6 +4944,53 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* API & CRMos Hub Modal */}
+      <ApiCrmHubModal
+        isOpen={showApiCrmModal}
+        onClose={() => setShowApiCrmModal(false)}
+        crmContacts={crmContacts}
+        onCrmContactSynced={(contact) => {
+          setCrmContacts((prev) => {
+            const exists = prev.some(
+              (c) => c.email.toLowerCase() === contact.email.toLowerCase()
+            );
+            if (exists) {
+              return prev.map((c) =>
+                c.email.toLowerCase() === contact.email.toLowerCase() ? contact : c
+              );
+            }
+            return [contact, ...prev];
+          });
+        }}
+        onInboundEmailCreated={(newEmail, crmContact) => {
+          setEmails((prev) => [newEmail, ...prev]);
+          setCrmContacts((prev) => {
+            const exists = prev.some(
+              (c) => c.email.toLowerCase() === crmContact.email.toLowerCase()
+            );
+            if (exists) {
+              return prev.map((c) =>
+                c.email.toLowerCase() === crmContact.email.toLowerCase() ? crmContact : c
+              );
+            }
+            return [crmContact, ...prev];
+          });
+          setSelectedCompanyFilter(newEmail.companyId);
+          setActiveEmailId(newEmail.id);
+          setActiveTab('mail');
+          setShowApiCrmModal(false);
+        }}
+        currentUser={{
+          uid: userUid,
+          name: userName,
+          email: userEmail,
+          role: isAdminMode ? 'Directie' : 'Partner',
+          companyId: selectedCompanyFilter === 'ALL' ? 'quantum_initium' : selectedCompanyFilter,
+          tags: ensureQuantumMailTags(userTags)
+        }}
+        onShowToast={showToast}
+      />
 
       {/* Auth Modal (Inloggen of Registreren) */}
       {showAuthModal && (
