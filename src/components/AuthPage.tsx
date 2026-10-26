@@ -20,6 +20,7 @@ import {
   MAIL_QI_TAG
 } from '../services/crmosService.ts';
 import { QuantumLogo } from './QuantumLogo.tsx';
+import { CompanyLogo } from './CompanyLogo.tsx';
 
 export interface AuthPageProps {
   onSuccessLogin: (userData: {
@@ -650,19 +651,22 @@ export function AuthPage({
                     <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                       Gekoppelde Onderneming
                     </label>
-                    <div className="relative">
-                      <Building2 className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                      <select
-                        value={regCompany}
-                        onChange={(e) => setRegCompany(e.target.value)}
-                        className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
-                      >
-                        {COMPANIES.map((c) => (
-                          <option key={c.id} value={c.id} className="bg-slate-900 text-white">
-                            {c.name}
-                          </option>
-                        ))}
-                      </select>
+                    <div className="flex items-center gap-2.5">
+                      <CompanyLogo companyId={regCompany} size={36} className="shrink-0" />
+                      <div className="relative flex-1 min-w-0">
+                        <Building2 className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <select
+                          value={regCompany}
+                          onChange={(e) => setRegCompany(e.target.value)}
+                          className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs sm:text-sm text-white focus:outline-none focus:border-[#0071e3] focus:ring-1 focus:ring-[#0071e3]/30 transition"
+                        >
+                          {COMPANIES.map((c) => (
+                            <option key={c.id} value={c.id} className="bg-slate-900 text-white">
+                              {c.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
                   </div>
 
@@ -832,12 +836,9 @@ export function AuthPage({
           {COMPANIES.map((comp) => (
             <span
               key={comp.id}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[10px] text-[#86868b]"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[10px] text-[#86868b] hover:text-white hover:border-white/20 transition"
             >
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: comp.color }}
-              />
+              <CompanyLogo companyId={comp.id} size={15} showContainer={false} />
               <span>{comp.name}</span>
             </span>
           ))}

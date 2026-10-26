@@ -5,6 +5,8 @@ import {
 } from 'lucide-react';
 import { COMPANIES } from '../constants.ts';
 import { CrmContact, EmailCategory, NetworkEmail } from '../types.ts';
+import { QuantumLogo } from './QuantumLogo.tsx';
+import { CompanyLogo } from './CompanyLogo.tsx';
 import {
   MAIL_QI_TAG,
   categorizeMessage,
@@ -231,8 +233,8 @@ export const ApiCrmHubModal: React.FC<ApiCrmHubModalProps> = ({
         {/* Top Modal Header */}
         <div className="px-5 sm:px-7 py-4 sm:py-5 border-b border-white/10 flex items-center justify-between gap-3 bg-white/[0.02]">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-10 h-10 rounded-2xl bg-[#0071e3]/20 border border-[#2997ff]/35 flex items-center justify-center shrink-0">
-              <Layers className="w-5 h-5 text-[#2997ff]" />
+            <div className="w-10 h-10 rounded-2xl bg-[#0071e3]/15 border border-[#2997ff]/35 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(41,151,255,0.25)]">
+              <QuantumLogo size={28} />
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
@@ -447,11 +449,8 @@ export const ApiCrmHubModal: React.FC<ApiCrmHubModalProps> = ({
                       Toegewezen Onderneming (Postvak)
                     </span>
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="w-3 h-3 rounded-full shrink-0"
-                          style={{ backgroundColor: matchedCompany.color }}
-                        />
+                      <div className="flex items-center gap-2.5">
+                        <CompanyLogo companyId={matchedCompany.id} size={30} className="shrink-0" />
                         <span className="text-sm font-semibold text-white">
                           {matchedCompany.name}
                         </span>
@@ -662,10 +661,7 @@ export const ApiCrmHubModal: React.FC<ApiCrmHubModalProps> = ({
                               color: comp.color
                             }}
                           >
-                            <span
-                              className="w-1.5 h-1.5 rounded-full"
-                              style={{ backgroundColor: comp.color }}
-                            />
+                            <CompanyLogo companyId={comp.id} size={16} showContainer={false} />
                             <span>{comp.name}</span>
                           </span>
                         </div>

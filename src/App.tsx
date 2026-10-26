@@ -389,10 +389,7 @@ const SwipableEmailCard: React.FC<SwipableEmailCardProps> = ({
                   color: comp.color
                 }}
               >
-                <span
-                  className="w-1.5 h-1.5 rounded-full shrink-0"
-                  style={{ backgroundColor: comp.color }}
-                />
+                <CompanyLogo companyId={comp.id} size={16} showContainer={false} />
                 <span className="truncate">{comp.name}</span>
               </span>
 
@@ -480,7 +477,7 @@ const SwipableEmailCard: React.FC<SwipableEmailCardProps> = ({
             }`}
           />
 
-          <div className="w-44 shrink-0 flex items-center gap-1.5">
+          <div className="w-48 shrink-0 flex items-center gap-1.5">
             <span
               className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs border truncate max-w-full font-medium"
               style={{
@@ -489,10 +486,7 @@ const SwipableEmailCard: React.FC<SwipableEmailCardProps> = ({
                 color: comp.color
               }}
             >
-              <span
-                className="w-1.5 h-1.5 rounded-full shrink-0"
-                style={{ backgroundColor: comp.color }}
-              />
+              <CompanyLogo companyId={comp.id} size={18} showContainer={false} />
               <span className="truncate">{comp.name}</span>
             </span>
           </div>
@@ -2400,10 +2394,7 @@ export default function App() {
                     }`}
                   >
                     <div className="flex items-center gap-2 min-w-0">
-                      <span
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: company.color }}
-                      />
+                      <CompanyLogo companyId={company.id} size={20} showContainer={false} />
                       <span className="truncate">{company.name}</span>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
@@ -2731,12 +2722,7 @@ export default function App() {
                     >
                       {isSidebarCollapsed ? (
                         <div className="relative">
-                          <span
-                            className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold text-white shadow-sm"
-                            style={{ backgroundColor: company.color }}
-                          >
-                            {company.short}
-                          </span>
+                          <CompanyLogo companyId={company.id} size={28} />
                           {unread > 0 && (
                             <span className="w-2 h-2 rounded-full bg-amber-400 absolute -top-0.5 -right-0.5 ring-2 ring-slate-950" />
                           )}
@@ -2744,10 +2730,7 @@ export default function App() {
                       ) : (
                         <>
                           <div className="flex items-center gap-2 min-w-0">
-                            <span
-                              className="w-2 h-2 rounded-full shrink-0"
-                              style={{ backgroundColor: company.color }}
-                            />
+                            <CompanyLogo companyId={company.id} size={20} showContainer={false} />
                             <span className="truncate">{company.name}</span>
                           </div>
                           <div className="flex items-center gap-1 shrink-0">
@@ -3004,10 +2987,7 @@ export default function App() {
                             : 'bg-slate-950 text-slate-400 border-slate-800 hover:bg-slate-900'
                         }`}
                       >
-                        <span
-                          className="w-2 h-2 rounded-full shrink-0"
-                          style={{ backgroundColor: c.color }}
-                        />
+                        <CompanyLogo companyId={c.id} size={18} showContainer={false} />
                         <span className="truncate">{c.name}</span>
                         {unread > 0 && (
                           <span className="px-1.5 py-0.2 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
@@ -3445,12 +3425,13 @@ export default function App() {
                         isSelected ? 'bg-slate-900 border-l-2 border-emerald-400' : 'hover:bg-slate-900/60'
                       }`}
                     >
-                      <div
-                        className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm"
-                        style={{ backgroundColor: ch.color }}
-                      >
-                        {ch.short}
-                      </div>
+                      {ch.id === 'algemeen' ? (
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0 shadow-sm">
+                          <QuantumLogo size={22} />
+                        </div>
+                      ) : (
+                        <CompanyLogo companyId={ch.id} size={isChatSidebarCollapsed ? 28 : 32} className="shrink-0" />
+                      )}
 
                       {!isChatSidebarCollapsed && (
                         <div className="flex-1 min-w-0">
@@ -3530,12 +3511,13 @@ export default function App() {
                 return (
                   <div className="h-14 px-3 sm:px-5 bg-slate-950 border-b border-slate-800 flex items-center justify-between shrink-0 z-10">
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <div
-                        className="w-8 h-8 rounded-xl text-white flex items-center justify-center font-bold text-xs shrink-0"
-                        style={{ backgroundColor: currentComp.color }}
-                      >
-                        {currentComp.short}
-                      </div>
+                      {activeChatChannel === 'algemeen' ? (
+                        <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0 shadow-sm">
+                          <QuantumLogo size={24} />
+                        </div>
+                      ) : (
+                        <CompanyLogo companyId={activeChatChannel} size={34} className="shrink-0" />
+                      )}
                       <div className="min-w-0">
                         <h3 className="font-bold text-xs sm:text-sm text-white truncate">
                           {currentComp.name}
@@ -3963,12 +3945,13 @@ export default function App() {
                       isSelected ? 'bg-slate-900 border border-emerald-500/40 shadow-sm' : 'hover:bg-slate-900/60'
                     }`}
                   >
-                    <div
-                      className="w-8 h-8 rounded-xl text-white flex items-center justify-center font-bold text-xs shrink-0"
-                      style={{ backgroundColor: ch.color }}
-                    >
-                      {ch.short}
-                    </div>
+                    {ch.id === 'algemeen' ? (
+                      <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0 shadow-sm">
+                        <QuantumLogo size={20} />
+                      </div>
+                    ) : (
+                      <CompanyLogo companyId={ch.id} size={28} className="shrink-0" />
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className={`text-xs truncate ${isSelected ? 'font-bold text-white' : 'font-medium text-slate-300'}`}>
                         {ch.name}
@@ -4066,17 +4049,20 @@ export default function App() {
                   <label className="block text-xs font-semibold text-slate-300 mb-1.5">
                     Afzender Bedrijf
                   </label>
-                  <select
-                    value={composeCompany}
-                    onChange={(e) => setComposeCompany(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl border border-slate-800 text-xs sm:text-sm text-slate-200 bg-slate-950 focus:outline-none focus:border-amber-400 transition"
-                  >
-                    {COMPANIES.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name} (admin@{c.domain})
-                      </option>
-                    ))}
-                  </select>
+                  <div className="flex items-center gap-2.5">
+                    <CompanyLogo companyId={composeCompany} size={36} className="shrink-0" />
+                    <select
+                      value={composeCompany}
+                      onChange={(e) => setComposeCompany(e.target.value)}
+                      className="w-full px-3 py-2 rounded-xl border border-slate-800 text-xs sm:text-sm text-slate-200 bg-slate-950 focus:outline-none focus:border-amber-400 transition"
+                    >
+                      {COMPANIES.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.name} (admin@{c.domain})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
                 <div>
