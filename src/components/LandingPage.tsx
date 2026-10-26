@@ -6,7 +6,7 @@ import {
   Cpu, Sparkles, SlidersHorizontal, Menu, X
 } from 'lucide-react';
 import { Company } from '../types.ts';
-import { COMPANIES } from '../constants.ts';
+import { COMPANIES, SAMPLE_BUSINESS_EMAILS, INITIAL_CHATS_SEED } from '../constants.ts';
 import { QuantumLogo } from './QuantumLogo.tsx';
 import { CompanyLogo } from './CompanyLogo.tsx';
 
@@ -30,6 +30,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onToggleAmounts
 }) => {
   const [activePreviewTab, setActivePreviewTab] = useState<'mail' | 'chat'>('mail');
+  const [selectedPreviewCompany, setSelectedPreviewCompany] = useState<string>('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -276,6 +277,44 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             )}
           </div>
 
+          {/* ==================== 12 HOLDINGS INTERACTIVE LOGO RIBBON ==================== */}
+          <div className="mt-12 sm:mt-16 max-w-5xl mx-auto">
+            <div className="flex items-center justify-between mb-3.5 px-2">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-[#86868b] flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0071e3]" />
+                <span>Geconsolideerde Holdings &amp; Logo&#39;s</span>
+              </span>
+              <a
+                href="#bedrijven"
+                className="text-[11px] text-[#2997ff] hover:underline font-medium flex items-center gap-1 transition"
+              >
+                <span>Bekijk alle 12 dossiers</span>
+                <ChevronRight className="w-3 h-3" />
+              </a>
+            </div>
+
+            <div className="apple-glass rounded-2xl sm:rounded-3xl p-2.5 sm:p-3 border border-white/10 flex items-center gap-2 sm:gap-3 overflow-x-auto no-scrollbar scroll-smooth">
+              {COMPANIES.map((comp) => (
+                <button
+                  key={comp.id}
+                  onClick={() => onOpenCompanyInbox(comp.id)}
+                  className="flex items-center gap-2.5 px-3 py-2 rounded-xl sm:rounded-2xl hover:bg-white/[0.08] border border-transparent hover:border-white/10 transition-all duration-200 group shrink-0 text-left active:scale-95"
+                  title={`Open direct ${comp.name} postvak`}
+                >
+                  <CompanyLogo companyId={comp.id} size={38} />
+                  <div className="min-w-0 pr-1">
+                    <p className="text-xs font-semibold text-white group-hover:text-[#2997ff] transition truncate max-w-[120px]">
+                      {comp.name}
+                    </p>
+                    <p className="text-[10px] font-mono text-[#86868b] truncate max-w-[120px]">
+                      @{comp.domain}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* ==================== APPLE BENTO METRICS BAR ==================== */}
           <div className="mt-16 sm:mt-24 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-5xl mx-auto text-left">
             <div className="apple-glass-card rounded-3xl p-5 sm:p-6">
@@ -375,216 +414,255 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </button>
               </div>
 
+              {/* Interactive Company Logo Filter Pillbar */}
+              <div className="px-4 sm:px-6 py-2.5 bg-white/[0.02] border-b border-white/[0.06] flex items-center gap-2 overflow-x-auto no-scrollbar scroll-smooth">
+                <span className="text-[11px] font-semibold text-[#86868b] uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#2997ff]" />
+                  <span>Logo Filter:</span>
+                </span>
+                <button
+                  onClick={() => setSelectedPreviewCompany('all')}
+                  className={`px-3 py-1 rounded-full text-xs font-medium transition shrink-0 flex items-center gap-1.5 ${
+                    selectedPreviewCompany === 'all'
+                      ? 'bg-white text-black font-semibold shadow-sm'
+                      : 'bg-white/[0.05] text-[#86868b] hover:text-white hover:bg-white/[0.1]'
+                  }`}
+                >
+                  <QuantumLogo size={15} />
+                  <span>Alle 12</span>
+                </button>
+                {COMPANIES.map((comp) => {
+                  const isSelected = selectedPreviewCompany === comp.id;
+                  return (
+                    <button
+                      key={comp.id}
+                      onClick={() => setSelectedPreviewCompany(comp.id)}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium transition shrink-0 flex items-center gap-1.5 border ${
+                        isSelected
+                          ? 'bg-[#0071e3] text-white font-semibold border-[#2997ff]/60 shadow-[0_0_12px_rgba(0,113,227,0.4)]'
+                          : 'bg-white/[0.04] border-white/[0.08] text-[#86868b] hover:text-white hover:bg-white/[0.08]'
+                      }`}
+                      title={comp.name}
+                    >
+                      <CompanyLogo companyId={comp.id} size={18} showContainer={false} />
+                      <span>{comp.short}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
               {/* Preview Content Body */}
               <div className="p-4 sm:p-6 lg:p-8 space-y-3.5">
                 {activePreviewTab === 'mail' ? (
                   <>
-                    {/* Item 1 */}
-                    <div
-                      onClick={onEnterApp}
-                      className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/25 cursor-pointer transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 group"
-                    >
-                      <div className="flex items-start gap-3.5 min-w-0">
-                        <CompanyLogo companyId="quantum_initium" size={42} className="mt-0.5 shrink-0" />
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#2997ff]/15 text-[#2997ff] border border-[#2997ff]/30">
-                              Quantum Initium Holding
-                            </span>
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/[0.08] text-[#f5f5f7] border border-white/15">
-                              Directie Prioriteit
+                    {(selectedPreviewCompany === 'all'
+                      ? [
+                          {
+                            companyId: 'quantum_initium',
+                            category: 'Holding Prioriteit',
+                            badgeColor: '#2997ff',
+                            subject: 'Strategische Groeiprognose en Kwartaalrapportage Q4',
+                            sender: 'Directie Secretariaat',
+                            time: 'Zojuist',
+                            body: 'Geconsolideerde holdingomzet bedraagt € 14.280.000,- met een gerealiseerde nettomarge van € 2.450.000,- over alle aangesloten dochterondernemingen.'
+                          },
+                          {
+                            companyId: 'woningvry',
+                            category: 'Off-Market Dossier',
+                            badgeColor: '#30d158',
+                            subject: 'Investeringsdossier: Exclusief Beleggingspand Singel Amsterdam',
+                            sender: 'Acquisitieteam Vastgoed',
+                            time: '12 min geleden',
+                            body: 'Monumentaal grachtenpand Singel. Koopsom bedraagt € 1.850.000,- k.k. met een gegarandeerde huuropbrengst van € 133.200,-/jaar.'
+                          },
+                          {
+                            companyId: 'vvc',
+                            category: 'Syndicaatsallocatie',
+                            badgeColor: '#bf5af2',
+                            subject: 'Dividenduitkering en Toelichting Nieuw Scale-Up Syndicaat',
+                            sender: 'VVC Bestuursraad',
+                            time: '18 min geleden',
+                            body: 'Uitgekeerd kwartaaldividend bedraagt € 18.750,00 over een totale tranche van € 450.000,00 voor gekwalificeerde netwerkleden.'
+                          }
+                        ]
+                      : SAMPLE_BUSINESS_EMAILS.filter((e) => e.companyId === selectedPreviewCompany).slice(0, 3)
+                    ).map((email, idx) => {
+                      const comp = COMPANIES.find((c) => c.id === email.companyId) || COMPANIES[0];
+                      const subject = 'subject' in email ? email.subject : '';
+                      const sender = 'senderName' in email ? email.senderName : ('sender' in email ? (email as any).sender : comp.name);
+                      const time = 'time' in email ? (email as any).time : 'Vandaag';
+                      const body = 'body' in email ? email.body : '';
+
+                      // Extract any monetary mentions to safely wrap in masking button
+                      const displaySnippet = () => {
+                        if (email.companyId === 'quantum_initium') {
+                          return (
+                            <>
+                              Holdingomzet:{' '}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleAmounts();
+                                }}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
+                                title="Klik om afscherming te testen"
+                              >
+                                <span>👁️</span> <span>{showAmounts && isLoggedIn ? '€ 14.280.000,-' : '€ ••••••'}</span>
+                              </button>{' '}
+                              met nettomarge{' '}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleAmounts();
+                                }}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
+                              >
+                                <span>👁️</span> <span>{showAmounts && isLoggedIn ? '€ 2.450.000,-' : '€ ••••••'}</span>
+                              </button>
+                              .
+                            </>
+                          );
+                        }
+                        if (email.companyId === 'woningvry') {
+                          return (
+                            <>
+                              Singel Amsterdam. Koopsom:{' '}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleAmounts();
+                                }}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
+                              >
+                                <span>👁️</span> <span>{showAmounts && isLoggedIn ? '€ 1.850.000,- k.k.' : '€ ••••••'}</span>
+                              </button>{' '}
+                              (huur{' '}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleAmounts();
+                                }}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
+                              >
+                                <span>👁️</span> <span>{showAmounts && isLoggedIn ? '€ 133.200,-/jaar' : '€ ••••••'}</span>
+                              </button>
+                              ).
+                            </>
+                          );
+                        }
+                        if (email.companyId === 'vvc') {
+                          return (
+                            <>
+                              Kwartaaldividend:{' '}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleAmounts();
+                                }}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
+                              >
+                                <span>👁️</span> <span>{showAmounts && isLoggedIn ? '€ 18.750,00' : '€ ••••••'}</span>
+                              </button>{' '}
+                              over tranche{' '}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  onToggleAmounts();
+                                }}
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
+                              >
+                                <span>👁️</span> <span>{showAmounts && isLoggedIn ? '€ 450.000,00' : '€ ••••••'}</span>
+                              </button>
+                              .
+                            </>
+                          );
+                        }
+                        return (
+                          <span className="line-clamp-1">
+                            {body.slice(0, 140)}...
+                          </span>
+                        );
+                      };
+
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => onOpenCompanyInbox(email.companyId)}
+                          className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/25 cursor-pointer transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 group"
+                        >
+                          <div className="flex items-start gap-3.5 min-w-0">
+                            {/* Bespoke Holding Emblem Logo */}
+                            <CompanyLogo companyId={email.companyId} size={44} className="mt-0.5 shrink-0" />
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span
+                                  className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold border"
+                                  style={{
+                                    backgroundColor: `${comp.color}20`,
+                                    color: comp.color,
+                                    borderColor: `${comp.color}40`
+                                  }}
+                                >
+                                  {comp.name}
+                                </span>
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.08] text-[#f5f5f7] border border-white/15">
+                                  {sender}
+                                </span>
+                                <span className="text-[10px] font-mono text-[#86868b]">
+                                  @{comp.domain}
+                                </span>
+                              </div>
+                              <h4 className="text-sm sm:text-base font-semibold text-white mt-1 group-hover:text-[#2997ff] transition">
+                                {subject}
+                              </h4>
+                              <p className="text-xs text-[#86868b] mt-0.5">
+                                {displaySnippet()}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
+                            <span className="text-xs text-[#86868b] font-medium">{time}</span>
+                            <span className="p-1.5 rounded-full bg-white/[0.06] text-[#86868b] group-hover:text-[#2997ff] transition">
+                              <ChevronRight className="w-4 h-4" />
                             </span>
                           </div>
-                          <h4 className="text-sm sm:text-base font-semibold text-white mt-1 group-hover:text-[#2997ff] transition">
-                            Strategische Groeiprognose en Kwartaalrapportage Q4
-                          </h4>
-                          <p className="text-xs text-[#86868b] mt-0.5 line-clamp-1">
-                            Geconsolideerde holdingomzet:{' '}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleAmounts();
-                              }}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
-                              title="Klik om afscherming te testen"
-                            >
-                              <span>👁️</span>{' '}
-                              <span>{showAmounts && isLoggedIn ? '€ 14.280.000,-' : '€ ••••••'}</span>
-                            </button>{' '}
-                            met een gerealiseerde nettomarge van{' '}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleAmounts();
-                              }}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
-                              title="Klik om afscherming te testen"
-                            >
-                              <span>👁️</span>{' '}
-                              <span>{showAmounts && isLoggedIn ? '€ 2.450.000,-' : '€ ••••••'}</span>
-                            </button>
-                            .
-                          </p>
                         </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
-                        <span className="text-xs text-[#86868b] font-medium">Zojuist</span>
-                        <span className="p-1.5 rounded-full bg-white/[0.06] text-[#86868b] group-hover:text-[#2997ff] transition">
-                          <ChevronRight className="w-4 h-4" />
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Item 2 */}
-                    <div
-                      onClick={onEnterApp}
-                      className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/25 cursor-pointer transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 group"
-                    >
-                      <div className="flex items-start gap-3.5 min-w-0">
-                        <CompanyLogo companyId="woningvry" size={42} className="mt-0.5 shrink-0" />
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#30d158]/15 text-[#30d158] border border-[#30d158]/30">
-                              WoningVry Vastgoed
-                            </span>
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-white/[0.08] text-[#f5f5f7] border border-white/15">
-                              Off-Market Dossier
-                            </span>
-                          </div>
-                          <h4 className="text-sm sm:text-base font-semibold text-white mt-1 group-hover:text-[#2997ff] transition">
-                            Investeringsdossier: Exclusief Off-Market Beleggingspand Amsterdam
-                          </h4>
-                          <p className="text-xs text-[#86868b] mt-0.5 line-clamp-1">
-                            Monumentaal pand Singel. Koopsom:{' '}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleAmounts();
-                              }}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
-                              title="Klik om afscherming te testen"
-                            >
-                              <span>👁️</span>{' '}
-                              <span>{showAmounts && isLoggedIn ? '€ 1.850.000,- k.k.' : '€ ••••••'}</span>
-                            </button>{' '}
-                            met een huuropbrengst van{' '}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleAmounts();
-                              }}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
-                              title="Klik om afscherming te testen"
-                            >
-                              <span>👁️</span>{' '}
-                              <span>{showAmounts && isLoggedIn ? '€ 133.200,-/jaar' : '€ ••••••'}</span>
-                            </button>
-                            .
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
-                        <span className="text-xs text-[#86868b] font-medium">12 min geleden</span>
-                        <span className="p-1.5 rounded-full bg-white/[0.06] text-[#86868b] group-hover:text-[#2997ff] transition">
-                          <ChevronRight className="w-4 h-4" />
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Item 3 */}
-                    <div
-                      onClick={onEnterApp}
-                      className="p-4 rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.08] hover:border-white/25 cursor-pointer transition-all duration-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 group"
-                    >
-                      <div className="flex items-start gap-3.5 min-w-0">
-                        <CompanyLogo companyId="vvc" size={42} className="mt-0.5 shrink-0" />
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#bf5af2]/15 text-[#bf5af2] border border-[#bf5af2]/30">
-                              VVC Netwerkkring
-                            </span>
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-[#30d158]/15 text-[#30d158] border border-[#30d158]/30">
-                              Dividendallocatie
-                            </span>
-                          </div>
-                          <h4 className="text-sm sm:text-base font-semibold text-white mt-1 group-hover:text-[#2997ff] transition">
-                            Dividenduitkering en Toelichting Nieuw Investeringssyndicaat
-                          </h4>
-                          <p className="text-xs text-[#86868b] mt-0.5 line-clamp-1">
-                            Uitgekeerd kwartaaldividend:{' '}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleAmounts();
-                              }}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
-                              title="Klik om afscherming te testen"
-                            >
-                              <span>👁️</span>{' '}
-                              <span>{showAmounts && isLoggedIn ? '€ 18.750,00' : '€ ••••••'}</span>
-                            </button>{' '}
-                            over totale tranche van{' '}
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onToggleAmounts();
-                              }}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 hover:bg-[#2997ff]/25 border border-[#2997ff]/30 text-[#2997ff] font-mono text-[11px] font-semibold transition"
-                              title="Klik om afscherming te testen"
-                            >
-                              <span>👁️</span>{' '}
-                              <span>{showAmounts && isLoggedIn ? '€ 450.000,00' : '€ ••••••'}</span>
-                            </button>
-                            .
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 shrink-0 self-end md:self-center">
-                        <span className="text-xs text-[#86868b] font-medium">18 min geleden</span>
-                        <span className="p-1.5 rounded-full bg-white/[0.06] text-[#86868b] group-hover:text-[#2997ff] transition">
-                          <ChevronRight className="w-4 h-4" />
-                        </span>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </>
                 ) : (
-                  /* Chat Tab Preview */
+                  /* Chat Tab Preview with Company Logos */
                   <div className="space-y-3">
-                    <div className="p-4 rounded-2xl bg-white/[0.04] border border-white/[0.1]">
-                      <div className="flex items-center justify-between text-xs mb-2">
-                        <span className="font-semibold text-[#2997ff] flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#2997ff]" />
-                          Jamal Drenthe (Directie)
-                        </span>
-                        <span className="text-[#86868b]">14:28</span>
-                      </div>
-                      <p className="text-xs sm:text-sm text-[#f5f5f7]">
-                        Het dossier Singel voor WoningVry is zojuist geüpload in het postvak. De koopsom bedraagt{' '}
-                        <button
-                          onClick={onToggleAmounts}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#2997ff]/15 border border-[#2997ff]/30 text-[#2997ff] font-mono text-xs font-semibold"
+                    {(selectedPreviewCompany === 'all'
+                      ? INITIAL_CHATS_SEED.slice(0, 3)
+                      : INITIAL_CHATS_SEED.filter((c) => c.companyId === selectedPreviewCompany)
+                    ).map((chat, idx) => {
+                      const comp = COMPANIES.find((c) => c.id === chat.companyId) || COMPANIES[0];
+                      return (
+                        <div
+                          key={idx}
+                          onClick={() => onOpenCompanyInbox(chat.companyId)}
+                          className="p-4 rounded-2xl bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.1] cursor-pointer transition flex items-start gap-3.5 group"
                         >
-                          <span>👁️</span> <span>{showAmounts && isLoggedIn ? '€ 1.850.000,-' : '€ ••••••'}</span>
-                        </button>
-                        . Gelieve vóór 17:00 te bevestigen.
-                      </p>
-                    </div>
-
-                    <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08]">
-                      <div className="flex items-center justify-between text-xs mb-2">
-                        <span className="font-semibold text-[#30d158] flex items-center gap-1.5">
-                          <span className="w-2 h-2 rounded-full bg-[#30d158]" />
-                          Partner Raad (VVC)
-                        </span>
-                        <span className="text-[#86868b]">14:31</span>
-                      </div>
-                      <p className="text-xs sm:text-sm text-[#86868b]">
-                        Akkoord vanuit syndicaat VVC. Wij reserveren de eerste participatietranche.
-                      </p>
-                    </div>
+                          <CompanyLogo companyId={chat.companyId} size={36} className="shrink-0 mt-0.5" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center justify-between text-xs mb-1.5">
+                              <span className="font-semibold text-white flex items-center gap-1.5">
+                                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: comp.color }} />
+                                <span>{chat.senderName}</span>
+                                <span className="text-[10px] text-[#86868b] font-normal">({comp.name})</span>
+                              </span>
+                              <span className="text-[#86868b]">14:28</span>
+                            </div>
+                            <p className="text-xs sm:text-sm text-[#f5f5f7] leading-relaxed">
+                              {chat.text}
+                            </p>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-[#86868b] group-hover:text-[#2997ff] shrink-0 self-center transition" />
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -612,22 +690,34 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <div
                 key={comp.id}
                 onClick={() => onOpenCompanyInbox(comp.id)}
-                className="apple-glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between cursor-pointer group"
+                className="apple-glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between cursor-pointer group transition-all duration-300 hover:-translate-y-1 hover:border-white/20"
               >
                 <div>
-                  <div className="flex items-center justify-between gap-3 mb-4">
-                    {/* Authentic Company Logo with Apple Glow */}
-                    <CompanyLogo companyId={comp.id} size={46} />
+                  <div className="flex items-start justify-between gap-3 mb-5">
+                    {/* Bespoke Company Emblem Logo with Brand Glow */}
+                    <div className="relative">
+                      <div
+                        className="absolute -inset-1.5 rounded-2xl opacity-20 blur-lg group-hover:opacity-60 transition duration-300 pointer-events-none"
+                        style={{ backgroundColor: comp.color }}
+                      />
+                      <CompanyLogo companyId={comp.id} size={52} className="relative z-10 transition-transform group-hover:scale-105" />
+                    </div>
 
-                    <span className="text-[11px] font-mono text-[#86868b] px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.1] truncate max-w-[150px]">
+                    <span className="text-[10px] font-mono text-[#86868b] px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.1] truncate max-w-[140px] group-hover:text-white group-hover:border-white/20 transition">
                       @{comp.domain}
                     </span>
                   </div>
 
-                  <h3 className="text-base font-semibold text-white tracking-tight group-hover:text-[#2997ff] transition">
-                    {comp.name}
+                  <h3 className="text-base font-semibold text-white tracking-tight group-hover:text-[#2997ff] transition flex items-center justify-between">
+                    <span>{comp.name}</span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/[0.06] text-[#86868b] group-hover:text-white">
+                      {comp.short}
+                    </span>
                   </h3>
-                  <p className="text-[11px] font-medium text-[#2997ff] mt-0.5">
+                  <p
+                    className="text-[11px] font-medium mt-0.5"
+                    style={{ color: comp.color }}
+                  >
                     {comp.category}
                   </p>
                   <p className="text-xs text-[#86868b] mt-2.5 leading-relaxed line-clamp-2">
@@ -635,8 +725,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </p>
                 </div>
 
-                <div className="mt-5 pt-3.5 border-t border-white/[0.08] flex items-center justify-between text-xs font-semibold text-[#f5f5f7] group-hover:text-[#2997ff]">
-                  <span>Open Postvak</span>
+                <div className="mt-5 pt-3.5 border-t border-white/[0.08] flex items-center justify-between text-xs font-semibold text-[#f5f5f7] group-hover:text-[#2997ff] transition">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: comp.color }} />
+                    <span>Open Postvak</span>
+                  </span>
                   <ChevronRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
@@ -791,6 +884,46 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <button onClick={onOpenLogin} className="hover:text-[#2997ff] transition">
               Partner Inloggen
             </button>
+          </div>
+        </div>
+
+        {/* 12 Holdings Bespoke Logo Showcase in Footer */}
+        <div className="max-w-7xl mx-auto my-8 pt-8 border-t border-white/[0.06]">
+          <div className="flex items-center justify-between mb-4 px-1">
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#86868b] flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0071e3]" />
+              <span>Geaccrediteerde Holding Logo&#39;s</span>
+            </span>
+            <span className="text-[11px] text-[#86868b] hidden sm:inline">
+              12 actieve directiekanalen • Klik om postvak te openen
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12 gap-2 sm:gap-2.5">
+            {COMPANIES.map((comp) => (
+              <button
+                key={comp.id}
+                onClick={() => onOpenCompanyInbox(comp.id)}
+                className="flex flex-col items-center gap-2 p-2.5 rounded-2xl bg-white/[0.02] hover:bg-white/[0.07] border border-white/[0.05] hover:border-white/20 transition-all duration-200 group text-center cursor-pointer"
+                title={`Open direct ${comp.name} postvak`}
+              >
+                <div className="relative">
+                  <div
+                    className="absolute -inset-1 rounded-xl opacity-0 blur-md group-hover:opacity-50 transition duration-300 pointer-events-none"
+                    style={{ backgroundColor: comp.color }}
+                  />
+                  <CompanyLogo companyId={comp.id} size={36} className="relative z-10 transition-transform group-hover:scale-110" />
+                </div>
+                <div className="min-w-0 w-full">
+                  <p className="text-[11px] font-semibold text-white group-hover:text-[#2997ff] transition truncate">
+                    {comp.short}
+                  </p>
+                  <p className="text-[9px] font-mono text-[#86868b] truncate">
+                    @{comp.domain.split('.')[0]}
+                  </p>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
 
