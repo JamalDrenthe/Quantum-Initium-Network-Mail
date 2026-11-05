@@ -7,15 +7,11 @@
 [![Firebase](https://img.shields.io/badge/Firebase-Dual_Firestore_%26_Auth-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![Cloudflare Edge](https://img.shields.io/badge/Cloudflare_Pages-mail.quantuminitium.com-F38020?logo=cloudflare&logoColor=white)](https://mail.quantuminitium.com)
 
-> **Executive Summary (NL):** **Quantum Initium Network Mail** (`mail.quantuminitium.com`) is de centrale, multi-tenant zakelijke communicatiehub voor alle **12 ondernemingen** binnen de **Quantum Initium Holding**. Het platform verenigt 12 gescheiden zakelijke postvakken (`*.qin`), realtime **QI Chat** met vastgezette directie-onderwerpen, **Privacy-by-Design bedragmaskering**, en een serverloze **Inbound Auto-Categorization & Bidirectionele CRMos API** die elk binnenkomend bericht automatisch classificeert en voorziet van de `mail.quantuminitium` systeemtag.
->
-> **Executive Summary (EN):** **Quantum Initium Network Mail** is an enterprise multi-holding communication operating system managing 12 corporate `.qin` domains, real-time executive **QI Chat**, automatic financial amount masking (`€ ••••••`), and edge-deployed inbound email classification webhooks (`/api/inbound`, `/api/crm`) with live dual-Firestore synchronization into **CRMos**.
+**Quantum Initium Network Mail** (`mail.quantuminitium.com`) is de centrale, multi-tenant zakelijke communicatiehub voor alle **12 ondernemingen** binnen de **Quantum Initium Holding**. Het platform verenigt 12 gescheiden zakelijke postvakken (`*.qin`), realtime **QI Chat** met vastgezette directie-onderwerpen, **Privacy-by-Design bedragmaskering**, en een serverloze **Inbound Auto-Categorization & Bidirectionele CRMos API** die elk binnenkomend bericht automatisch classificeert en voorziet van de `mail.quantuminitium` systeemtag.
 
 ---
 
-## Waarom dit project technisch onderscheidend is (For Technical Recruiters & CTOs)
-
-Multi-holding organisaties kampen vaak met gefragmenteerde inboxen, handmatige CRM-invoer en gevoelige financiële cijfers die onbeschermd op schermen zichtbaar zijn. **Quantum Initium Network Mail** lost dit op met vier kerninnovaties:
+## Technische Kernpunten
 
 1. **Intelligente Inbound Classificatie & Auto-Routing Engine (`functions/api/inbound.ts`, `src/services/crmosService.ts`)**:
    - Elke inkomende e-mail, webhook of formulierinzending wordt door een gewogen heuristische scorings-engine geanalyseerd op ontvanger-domein (`+50`), afzender-domein (`+25`), expliciete holding-ID (`+100`) en domeinspecifieke trefwoordclusters (`+15` per match).
@@ -146,12 +142,10 @@ De ontwikkelserver start standaard op `http://localhost:3000`.
 
 ---
 
-## Over de Architect & Samenwerking
+## Auteur & Contact
 
-Ontworpen en gebouwd door **Jamal Drenthe** — Full-Stack Software Engineer, Enterprise Systems Architect & Founder van **Quantum Initium**.
+Ontworpen en ontwikkeld door **Jamal Drenthe** ([Quantum Initium](https://quantuminitium.com)).
 
-Ben je **recruiter**, **CTO** of **zakelijke beslisser** en zoek je een ervaren bouwer voor multi-tenant bedrijfssoftware, intelligente e-mail/CRM-automatisering of realtime samenwerkingstools?
-
+- **Website**: [mail.quantuminitium.com](https://mail.quantuminitium.com)
 - **GitHub**: [@JamalDrenthe](https://github.com/JamalDrenthe)
 - **E-mail**: [info@jamaldrenthe.com](mailto:info@jamaldrenthe.com)
-- **Live Omgeving**: [mail.quantuminitium.com](https://mail.quantuminitium.com)
