@@ -5,7 +5,7 @@
 [![Vite](https://img.shields.io/badge/Vite-8.3-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Firebase](https://img.shields.io/badge/Firebase-Dual_Firestore_%26_Auth-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![Cloudflare Edge](https://img.shields.io/badge/Cloudflare_Pages-Inbound_Webhook_API-F38020?logo=cloudflare&logoColor=white)](https://quantum-initium-network-mail.vercel.app)
+[![Cloudflare Edge](https://img.shields.io/badge/Cloudflare_Pages-mail.quantuminitium.com-F38020?logo=cloudflare&logoColor=white)](https://mail.quantuminitium.com)
 
 > **Executive Summary (NL):** **Quantum Initium Network Mail** (`mail.quantuminitium.com`) is de centrale, multi-tenant zakelijke communicatiehub voor alle **12 ondernemingen** binnen de **Quantum Initium Holding**. Het platform verenigt 12 gescheiden zakelijke postvakken (`*.qin`), realtime **QI Chat** met vastgezette directie-onderwerpen, **Privacy-by-Design bedragmaskering**, en een serverloze **Inbound Auto-Categorization & Bidirectionele CRMos API** die elk binnenkomend bericht automatisch classificeert en voorziet van de `mail.quantuminitium` systeemtag.
 >
@@ -154,4 +154,4 @@ Ben je **recruiter**, **CTO** of **zakelijke beslisser** en zoek je een ervaren 
 
 - **GitHub**: [@JamalDrenthe](https://github.com/JamalDrenthe)
 - **E-mail**: [info@jamaldrenthe.com](mailto:info@jamaldrenthe.com)
-- **Live Omgeving**: [quantum-initium-network-mail.vercel.app](https://quantum-initium-network-mail.vercel.app)
+- **Live Omgeving**: [mail.quantuminitium.com](https://mail.quantuminitium.com)
