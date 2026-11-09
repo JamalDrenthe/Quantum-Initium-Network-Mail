@@ -211,7 +211,26 @@ export async function onRequest(context: { request: Request }): Promise<Response
       }
     };
 
+    const nameParts = senderName.split(' ');
+    const firstName = nameParts[0] || 'Contact';
+    const lastName = nameParts.slice(1).join(' ') || classification.companyName;
+
     await Promise.allSettled([
+      fetch('https://crmos.one/api/v1/contacts/upsert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CRMOS-API-KEY': 'crm_live_quantum_initium_enterprise_2026'
+        },
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email: senderEmail,
+          company: classification.companyName,
+          tags: classification.tags,
+          notes: `Inbound mail ontvangen: "${payload.subject || 'Geen onderwerp'}" gecategoriseerd onder ${classification.companyName}.`
+        })
+      }),
       fetch(
         `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/crm_contacts/${contactId}`,
         {

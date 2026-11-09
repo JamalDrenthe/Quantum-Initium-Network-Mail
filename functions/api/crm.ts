@@ -133,7 +133,27 @@ export async function onRequest(context: { request: Request }): Promise<Response
         }
       };
 
+      const nameParts = name.split(' ');
+      const firstName = nameParts[0] || 'Contact';
+      const lastName = nameParts.slice(1).join(' ') || companyId;
+
       await Promise.allSettled([
+        fetch('https://crmos.one/api/v1/contacts/upsert', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CRMOS-API-KEY': 'crm_live_quantum_initium_enterprise_2026'
+          },
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            phone,
+            company: companyId,
+            tags,
+            notes: `Gesynchroniseerd via mail.quantuminitium.com API met ${MAIL_QI_TAG} tag.`
+          })
+        }),
         fetch(
           `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/crm_contacts/${contactId}`,
           {

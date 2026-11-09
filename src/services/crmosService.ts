@@ -18,6 +18,281 @@ import {
 
 export const MAIL_QI_TAG = 'mail.quantuminitium';
 
+// ==========================================
+// CRMos Cloud API (https://crmos.one/api/v1)
+// ==========================================
+export const CRM_API_BASE_URL = 'https://crmos.one/api/v1';
+
+export const CRM_API_KEYS = {
+  master: 'crm_live_master_jamaldrenthe_2026_all_ecosystem',
+  all: 'crm_live_master_jamaldrenthe_2026_all_ecosystem',
+  vvc: 'crm_live_vvc_verdienende_vrienden_club_2026',
+  spontiva: 'crm_live_spontiva_recruitment_2026',
+  boostplug: 'crm_live_boostplug_energy_iot_2026',
+  quantum_initium: 'crm_live_quantum_initium_enterprise_2026',
+  immigratiepunt: 'crm_live_immigratiepunt_portal_2026',
+  woningvry: 'crm_live_woningvry_realestate_2026',
+  djobba: 'crm_live_djobba_works_freelance_2026',
+  trusting_work: 'crm_live_trusting_work_staffing_2026',
+  logs_rent: 'crm_live_logs_rent_logistics_2026',
+  zheavenzy: 'crm_live_zheavenzy_atelier_2026',
+  xabi_world: 'crm_live_xabi_world_international_2026',
+  crmos: 'crm_live_crmos_core_platform_2026'
+} as const;
+
+export const CRM_COMPANY_TAGS: Record<string, string> = {
+  master: '#all',
+  all: '#all',
+  vvc: '#vvc',
+  spontiva: '#spontiva',
+  boostplug: '#boostplug',
+  quantum_initium: '#quantum-initium',
+  immigratiepunt: '#immigratiepunt',
+  woningvry: '#woningvry',
+  djobba: '#djobba-works',
+  trusting_work: '#trusting-work',
+  logs_rent: '#logs-rent',
+  zheavenzy: '#zheavenzy',
+  xabi_world: '#xabi-world',
+  crmos: '#crmos'
+};
+
+export interface CrmosUpsertContactPayload {
+  first_name: string;
+  last_name?: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  tags?: string[];
+  notes?: string;
+  deal_value?: string;
+}
+
+export interface CrmosCandidatePayload {
+  first_name: string;
+  last_name?: string;
+  email: string;
+  phone?: string;
+  role_applied: string;
+  deal_model?: string;
+  company?: string;
+  tags?: string[];
+  notes?: string;
+}
+
+export interface CrmosDealPayload {
+  name: string;
+  value: number;
+  stage?: string;
+  company_name: string;
+  contact_email?: string;
+  notes?: string;
+}
+
+export interface CrmosWebhookPayload {
+  company: string;
+  url: string;
+  events: string[];
+  secret?: string;
+}
+
+/**
+ * Gets the company API key for CRMos requests.
+ */
+export function getCrmosApiKey(companyId?: string): string {
+  if (!companyId) return CRM_API_KEYS.quantum_initium;
+  const key = (CRM_API_KEYS as Record<string, string>)[companyId];
+  return key || CRM_API_KEYS.quantum_initium;
+}
+
+/**
+ * Checks connectivity to CRMos Cloud API.
+ */
+export async function crmosApiCheckHealth(): Promise<{
+  online: boolean;
+  version?: string;
+  authenticated_as?: string;
+  company_scope?: string;
+  raw?: unknown;
+}> {
+  try {
+    const res = await fetch(`${CRM_API_BASE_URL}/health`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRMOS-API-KEY': CRM_API_KEYS.quantum_initium
+      }
+    });
+    if (!res.ok) return { online: false };
+    const data = await res.json();
+    return {
+      online: data.status === 'online',
+      version: data.version,
+      authenticated_as: data.authenticated_as,
+      company_scope: data.company_scope,
+      raw: data
+    };
+  } catch {
+    return { online: false };
+  }
+}
+
+/**
+ * Upserts a contact in CRMos via `POST /api/v1/contacts/upsert`.
+ * Automatic email deduplication, tags merging, and timestamped note history.
+ */
+export async function crmosApiUpsertContact(
+  payload: CrmosUpsertContactPayload,
+  companyId?: string
+): Promise<{ success: boolean; action?: 'created' | 'updated'; data?: any; error?: string }> {
+  try {
+    const apiKey = getCrmosApiKey(companyId);
+    const res = await fetch(`${CRM_API_BASE_URL}/contacts/upsert`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRMOS-API-KEY': apiKey
+      },
+      body: JSON.stringify(payload)
+    });
+    const result = await res.json();
+    return result;
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Netwerkfout tijdens verbinden met CRMos API'
+    };
+  }
+}
+
+/**
+ * Creates or updates a candidate in CRMos via `POST /api/v1/candidates`.
+ */
+export async function crmosApiCreateCandidate(
+  payload: CrmosCandidatePayload,
+  companyId?: string
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const apiKey = getCrmosApiKey(companyId);
+    const res = await fetch(`${CRM_API_BASE_URL}/candidates`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRMOS-API-KEY': apiKey
+      },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Netwerkfout tijdens verbinden met CRMos API'
+    };
+  }
+}
+
+/**
+ * Creates a deal/verkooporder in CRMos via `POST /api/v1/deals`.
+ */
+export async function crmosApiCreateDeal(
+  payload: CrmosDealPayload,
+  companyId?: string
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const apiKey = getCrmosApiKey(companyId);
+    const res = await fetch(`${CRM_API_BASE_URL}/deals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRMOS-API-KEY': apiKey
+      },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Netwerkfout tijdens verbinden met CRMos API'
+    };
+  }
+}
+
+/**
+ * Searches CRMos via `GET /api/v1/search?q=...`.
+ */
+export async function crmosApiSearch(
+  queryText: string,
+  companyId?: string
+): Promise<{ success: boolean; results?: any; total_matches?: number; error?: string }> {
+  try {
+    const apiKey = getCrmosApiKey(companyId);
+    const res = await fetch(`${CRM_API_BASE_URL}/search?q=${encodeURIComponent(queryText)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRMOS-API-KEY': apiKey
+      }
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Netwerkfout tijdens zoeken in CRMos'
+    };
+  }
+}
+
+/**
+ * Looks up contact by email in CRMos via `GET /api/v1/contacts?email=...`.
+ */
+export async function crmosApiLookupContact(
+  email: string,
+  companyId?: string
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const apiKey = getCrmosApiKey(companyId);
+    const res = await fetch(`${CRM_API_BASE_URL}/contacts?email=${encodeURIComponent(email)}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRMOS-API-KEY': apiKey
+      }
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Netwerkfout tijdens ophalen contact in CRMos'
+    };
+  }
+}
+
+/**
+ * Registers an outbound webhook in CRMos via `POST /api/v1/webhooks`.
+ */
+export async function crmosApiRegisterWebhook(
+  payload: CrmosWebhookPayload,
+  companyId?: string
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const apiKey = getCrmosApiKey(companyId);
+    const res = await fetch(`${CRM_API_BASE_URL}/webhooks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CRMOS-API-KEY': apiKey
+      },
+      body: JSON.stringify(payload)
+    });
+    return await res.json();
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Netwerkfout tijdens registreren webhook'
+    };
+  }
+}
+
 export const INITIAL_CRM_CONTACTS_SEED: CrmContact[] = [
   {
     id: 'crm_qi_01',
@@ -521,14 +796,43 @@ export async function syncContactWithCrmos(contactInput: {
     lastSyncedAt: Date.now()
   };
 
-  // 1. Write to primary Firestore `crm_contacts`
+  // 1. Bi-directionele sync met CRMos Cloud REST API (POST https://crmos.one/api/v1/contacts/upsert)
+  const nameParts = (syncedContact.name).trim().split(' ');
+  const firstName = nameParts[0] || 'Contact';
+  const lastName = nameParts.slice(1).join(' ') || comp.name;
+  const companyTag = CRM_COMPANY_TAGS[comp.id] || `#${comp.id}`;
+
+  try {
+    const crmosRes = await crmosApiUpsertContact(
+      {
+        first_name: firstName,
+        last_name: lastName,
+        email: cleanEmail,
+        phone: syncedContact.phone,
+        company: comp.name,
+        tags: Array.from(new Set([MAIL_QI_TAG, companyTag, ...mergedTags])),
+        notes: syncedContact.notes
+      },
+      comp.id
+    );
+
+    if (crmosRes.success && crmosRes.data) {
+      if (crmosRes.data.id) syncedContact.id = crmosRes.data.id;
+      if (Array.isArray(crmosRes.data.tags)) syncedContact.tags = crmosRes.data.tags;
+      if (crmosRes.data.notes) syncedContact.notes = crmosRes.data.notes;
+    }
+  } catch {
+    // Continue with local / firestore write
+  }
+
+  // 2. Write to primary Firestore `crm_contacts`
   try {
     await setDoc(doc(db, 'crm_contacts', contactId), syncedContact, { merge: true });
   } catch {
     // Ignore offline error
   }
 
-  // 2. Write to CRMos (`crmosone-dev`) Firestore `contacts` collection with `mail.quantuminitium` tag
+  // 3. Write to CRMos (`crmosone-dev`) Firestore `contacts` collection with `mail.quantuminitium` tag
   try {
     await setDoc(
       doc(crmosDb, 'contacts', contactId),
